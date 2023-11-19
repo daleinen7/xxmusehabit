@@ -1,8 +1,9 @@
+"use clent";
+
+import { AuthContextProvider } from "./context/AuthContext";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import navData from "@/lib/navData";
-import Login from "./Login";
-import Link from "next/link";
+import Nav from "./components/Nav";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,28 +13,15 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  const session = await getServerSession(authOptions);
-
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className="flex min-h-screen flex-col items-center justify-start p-24">
-          <nav>
-            <ul>
-              <li>
-                <Link href="/">
-                  <h1>Musehabit</h1>
-                </Link>
-              </li>
-              {navData.map((navItem) => (
-                <li key={navItem.url}>
-                  <Link href={navItem.url}>{navItem.text}</Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-          {!session ? <Login /> : children}
-        </main>
+        <AuthContextProvider>
+          <Nav />
+          <main className="flex min-h-screen flex-col items-center justify-start p-24">
+            {children}
+          </main>
+        </AuthContextProvider>
       </body>
     </html>
   );
