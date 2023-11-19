@@ -1,6 +1,3 @@
-import { authOptions } from "../pages/api/auth/[...nextauth]";
-import { getServerSession } from "next-auth";
-import SessionProvider from "./SessionProvider";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import navData from "@/lib/navData";
@@ -20,25 +17,23 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <SessionProvider session={session}>
-          <main className="flex min-h-screen flex-col items-center justify-start p-24">
-            <nav>
-              <ul>
-                <li>
-                  <Link href="/">
-                    <h1>Musehabit</h1>
-                  </Link>
+        <main className="flex min-h-screen flex-col items-center justify-start p-24">
+          <nav>
+            <ul>
+              <li>
+                <Link href="/">
+                  <h1>Musehabit</h1>
+                </Link>
+              </li>
+              {navData.map((navItem) => (
+                <li key={navItem.url}>
+                  <Link href={navItem.url}>{navItem.text}</Link>
                 </li>
-                {navData.map((navItem) => (
-                  <li key={navItem.url}>
-                    <Link href={navItem.url}>{navItem.text}</Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-            {!session ? <Login /> : children}
-          </main>
-        </SessionProvider>
+              ))}
+            </ul>
+          </nav>
+          {!session ? <Login /> : children}
+        </main>
       </body>
     </html>
   );
