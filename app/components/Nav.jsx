@@ -6,8 +6,24 @@ import navData from "@/lib/navData";
 import Link from "next/link";
 
 const Nav = () => {
-  const { user } = UserAuth();
-  // console.log("USER: ", user);
+  const { user, googleSignIn, logOut } = UserAuth();
+
+  const handleSignIn = async () => {
+    try {
+      await googleSignIn();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleLogOut = async () => {
+    try {
+      await logOut();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <nav>
       <ul>
@@ -21,6 +37,25 @@ const Nav = () => {
             <Link href={navItem.url}>{navItem.text}</Link>
           </li>
         ))}
+        {user ? (
+          <>
+            <li>
+              <Link href="/profile">Profile</Link>
+            </li>
+            <li>
+              <button onClick={handleLogOut}>Log Out</button>
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              <button onClick={handleSignIn}>Login</button>
+            </li>
+            <li>
+              <button onClick={handleSignIn}>Sign Up</button>
+            </li>
+          </>
+        )}
       </ul>
     </nav>
   );
