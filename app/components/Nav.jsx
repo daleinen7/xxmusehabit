@@ -1,11 +1,13 @@
-import navData from "@/lib/navData";
-import Link from "next/link";
+"use client";
+import React, { useState, useEffect } from "react";
 import { UserAuth } from "../context/AuthContext";
 
-const Nav = () => {
-  const { user, logout } = UserAuth();
+import navData from "@/lib/navData";
+import Link from "next/link";
 
-  console.log("USER: ", user);
+const Nav = () => {
+  const { user } = UserAuth();
+  // console.log("USER: ", user);
   return (
     <nav>
       <ul>
