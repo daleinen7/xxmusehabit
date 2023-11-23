@@ -17,7 +17,9 @@ export default async function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <AuthContextProvider>
-          <Nav />
+          <header>
+            <Nav />
+          </header>
           <main className="flex min-h-screen flex-col items-center justify-start p-24">
             {children}
           </main>
