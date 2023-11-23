@@ -22,7 +22,7 @@ const Nav = () => {
     try {
       await googleSignIn();
     } catch (error) {
-      console.log(error);
+      console.log("ERROR: ", error);
     }
   };
 
@@ -30,7 +30,7 @@ const Nav = () => {
     try {
       await logOut();
     } catch (error) {
-      console.log(error);
+      console.log("ERROR: ", error);
     }
   };
 
@@ -54,7 +54,7 @@ const Nav = () => {
             return <NavItem key={navItem.text} {...navItem} />;
           }
 
-          return null; // Hide the item if conditions are not met
+          return null;
         })}
       </ul>
     </nav>
