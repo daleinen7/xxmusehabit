@@ -25,8 +25,6 @@ export default function Home() {
     return () => unsubscribe();
   }, []);
 
-  console.log("POSTS: ", posts);
-
   return (
     <>
       <h2>Main Feed</h2>
