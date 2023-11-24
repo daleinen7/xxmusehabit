@@ -1,11 +1,34 @@
 import Image from "next/image";
+import getFileType from "../../lib/getFileType";
+import { get } from "firebase/database";
+
 const Post = ({ post }) => {
+  console.log("POST: ", post);
+
+  const mediaType = getFileType(post.format);
+
   return (
     <article>
       <Image src={post.image} alt={post.title} width={400} height={240} />
       <h3>{post.title}</h3>
       <p>{post.description}</p>
-      {/* Additional post details */}
+      {mediaType === "image" && (
+        <Image src={post.image} alt={post.title} width={400} height={240} />
+      )}
+
+      {mediaType === "video" && (
+        <video width={400} height={240} controls>
+          <source src={post.draft} type={post.draft} />
+          Your browser does not support the video tag.
+        </video>
+      )}
+
+      {mediaType === "audio" && (
+        <audio controls>
+          <source src={post.draft} type={post.draft} />
+          Your browser does not support the audio tag.
+        </audio>
+      )}
     </article>
   );
 };

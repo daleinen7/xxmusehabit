@@ -6,7 +6,7 @@ import navData from "@/lib/navData";
 import Link from "next/link";
 
 const NavItem = ({ url, func, text }) => (
-  <li key={url}>
+  <li key={url} className="text-gray-400 hover:text-white">
     {url ? (
       <Link href={url}>{text}</Link>
     ) : (
@@ -35,8 +35,8 @@ const Nav = () => {
   };
 
   return (
-    <nav>
-      <ul>
+    <nav className="p-4">
+      <ul className="flex gap-6">
         <li>
           <Link href="/">
             <h1>Musehabit</h1>
