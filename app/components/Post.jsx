@@ -1,6 +1,5 @@
 import Image from "next/image";
 import getFileType from "../../lib/getFileType";
-import { get } from "firebase/database";
 
 const Post = ({ post }) => {
   console.log("POST: ", post);
