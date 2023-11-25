@@ -16,7 +16,7 @@ const NavItem = ({ url, func, text }) => (
 );
 
 const Nav = () => {
-  const { user, googleSignIn, logOut } = UserAuth();
+  const { user, userProfile, googleSignIn, logOut } = UserAuth();
 
   const handleSignIn = async () => {
     try {
