@@ -20,7 +20,6 @@ const Post = ({ post }) => {
           Your browser does not support the video tag.
         </video>
       )}
-      s
       {mediaType === "audio" && (
         <audio controls>
           <source src={post.draft} />
