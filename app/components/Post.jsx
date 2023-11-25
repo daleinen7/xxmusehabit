@@ -14,17 +14,16 @@ const Post = ({ post }) => {
       {mediaType === "image" && (
         <Image src={post.image} alt={post.title} width={400} height={240} />
       )}
-
       {mediaType === "video" && (
         <video width={400} height={240} controls>
-          <source src={post.draft} type={post.draft} />
+          <source src={post.draft} />
           Your browser does not support the video tag.
         </video>
       )}
-
+      s
       {mediaType === "audio" && (
         <audio controls>
-          <source src={post.draft} type={post.draft} />
+          <source src={post.draft} />
           Your browser does not support the audio tag.
         </audio>
       )}
