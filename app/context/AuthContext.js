@@ -1,13 +1,13 @@
 "use client";
 import { useContext, createContext, useState, useEffect } from "react";
 import {
-  signInWithPopup,
+  signInWithRedirect,
   signOut,
   onAuthStateChanged,
   GoogleAuthProvider,
 } from "firebase/auth";
 import { auth, db } from "../../lib/firebase";
-import { ref, get, set, onValue } from "firebase/database";
+import { ref, get, set, onValue, serverTimestamp } from "firebase/database";
 
 const AuthContext = createContext();
 
@@ -17,7 +17,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const googleSignIn = () => {
     const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider);
+    signInWithRedirect(auth, provider);
   };
 
   const logOut = () => {
@@ -35,8 +35,16 @@ export const AuthContextProvider = ({ children }) => {
             // User profile doesn't exist, create a new one
             set(userRef, {
               username: currentUser.displayName,
-
-              // Other default values
+              bio: "",
+              photoURL: currentUser.photoURL,
+              joined: serverTimestamp(),
+              settings: {
+                dayBeforeNotification: true,
+                weekBeforeNotification: true,
+                tenDaysBeforeNotification: true,
+                accountabilityNotice: true,
+              },
+              zipcode: false,
             });
           }
           // Get user profile

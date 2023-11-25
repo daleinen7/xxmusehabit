@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { UserAuth } from "../context/AuthContext";
 import { useForm } from "react-hook-form";
-import { ref as databaseRef, push, update, child } from "firebase/database";
+import { ref, push, update, child, serverTimestamp } from "firebase/database";
 import { storage, db } from "../../lib/firebase";
 import uploadFileToStorage from "../../lib/uploadFileToStorage";
 
@@ -62,11 +62,14 @@ const Share = () => {
       return;
     }
 
+    console.log("image: ", image[0]);
+    console.log("draft: ", draft[0]);
+
     const imageFile = image[0];
     const draftFile = draft[0];
 
     // Generate a unique key for the new post
-    const newPostKey = push(child(databaseRef(db), "posts")).key;
+    const newPostKey = push(child(ref(db), "posts")).key;
 
     const today = new Date();
 
@@ -101,15 +104,20 @@ const Share = () => {
       image: imageFileUrl,
       draft: draftFileUrl,
       format: draftFile.name.split(".").pop(),
+      poster: user.uid,
+      // createdAt: serverTimestamp,
     };
 
-    // Write the new post's data simultaneously in the posts list and the user's post list
+    // Write the new post's data in the posts list
     const updates = {};
     updates["/posts/" + newPostKey] = newPost;
 
+    // Update the user's posts list with the new post ID
+    updates[`/users/${user.uid}/posts/${newPostKey}`] = true;
+
     setShared(true);
 
-    return update(databaseRef(db), updates);
+    return update(ref(db), updates);
   };
 
   // if no posts
