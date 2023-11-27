@@ -14,6 +14,8 @@ const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
+  const [canPost, setCanPost] = useState(false);
+  const [daysUntilNextPost, setDaysUntilNextPost] = useState(null);
 
   const googleSignIn = () => {
     const provider = new GoogleAuthProvider();
@@ -51,6 +53,24 @@ export const AuthContextProvider = ({ children }) => {
           // Get user profile
           onValue(userRef, (snapshot) => {
             setUserProfile(snapshot.val());
+
+            // Calculate canPost and daysUntilNextPost
+            const latestPostDate = userData.latestPost
+              ? new Date(userData.latestPost)
+              : null;
+            const today = new Date();
+            console.log("LATEST POST DATE: ", latestPostDate);
+            console.log("TODAY: ", today);
+            const daysSinceLastPost = latestPostDate
+              ? differenceInDays(today, latestPostDate)
+              : null;
+            const daysUntilNext = userData.joined
+              ? differenceInDays(addDays(today, 1), userData.joined)
+              : null;
+
+            // Update state
+            setCanPost(!latestPostDate || daysSinceLastPost >= 1);
+            setDaysUntilNextPost(daysUntilNext);
           });
         });
       }
@@ -59,7 +79,16 @@ export const AuthContextProvider = ({ children }) => {
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, userProfile, googleSignIn, logOut }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        userProfile,
+        canPost,
+        daysUntilNextPost,
+        googleSignIn,
+        logOut,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

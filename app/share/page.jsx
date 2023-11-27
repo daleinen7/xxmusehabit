@@ -1,11 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { UserAuth } from "../context/AuthContext";
 import { useForm } from "react-hook-form";
 import { ref, push, update, child, serverTimestamp } from "firebase/database";
 import { storage, db } from "../../lib/firebase";
 import uploadFileToStorage from "../../lib/uploadFileToStorage";
-import { canUserPost } from "../../lib/canUserPost";
+import { daysUntilNextPost } from "../../lib/daysUntilNextPost";
 
 const Share = () => {
   const { register, handleSubmit, errors } = useForm();
@@ -63,10 +63,10 @@ const Share = () => {
       return;
     }
 
-    const userCanPost = await canUserPost(user.uid);
+    const { canPost } = await daysUntilNextPost(user.uid);
 
     // check if user is allowed to post
-    if (!userCanPost) {
+    if (!canPost) {
       console.error("User not allowed to post");
       alert("User not allowed to post");
       return;

@@ -1,8 +1,8 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { UserAuth } from "../context/AuthContext";
-
-import navData from "@/lib/navData";
+import { daysUntilNextPost } from "../../lib/daysUntilNextPost";
+import navData from "../../lib/navData";
 import Link from "next/link";
 
 const NavItem = ({ url, func, text }) => (
@@ -17,6 +17,24 @@ const NavItem = ({ url, func, text }) => (
 
 const Nav = () => {
   const { user, userProfile, googleSignIn, logOut } = UserAuth();
+  const [canUserPostState, setCanUserPostState] = useState(false);
+  const [daysUntilNextPostState, setDaysUntilNextPostState] = useState(null);
+
+  useEffect(() => {
+    const checkUserPostability = async () => {
+      try {
+        const result = await daysUntilNextPost(user?.uid);
+        setCanUserPostState(result.canPost);
+        setDaysUntilNextPostState(result.daysUntilNextPost);
+      } catch (error) {
+        console.error("Error checking if user can post:", error);
+        // Handle the error if necessary
+      }
+    };
+
+    // Check user postability when the component mounts
+    checkUserPostability();
+  }, [user?.uid]);
 
   const handleSignIn = async () => {
     try {
@@ -36,15 +54,32 @@ const Nav = () => {
 
   return (
     <nav className="p-4">
-      <ul className="flex gap-6">
+      <ul className="flex gap-6 items-center">
         <li>
           <Link href="/">
-            <h1>Musehabit</h1>
+            <h1 className="text-xl">Musehabit</h1>
           </Link>
         </li>
         {navData.map((navItem) => {
           if (navItem.function === "handleSignIn") navItem.func = handleSignIn;
           if (navItem.function === "handleLogOut") navItem.func = handleLogOut;
+
+          if (navItem.text === "Share") {
+            if (canUserPostState) {
+              return (
+                <>
+                  You have {daysUntilNextPostState} days left to post
+                  <NavItem key={navItem.text} {...navItem} />
+                </>
+              );
+            } else {
+              return (
+                <li key={navItem.url}>
+                  Days until you can post: {daysUntilNextPost}
+                </li>
+              );
+            }
+          }
 
           if (
             navItem.auth === undefined ||
