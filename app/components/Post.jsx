@@ -2,8 +2,6 @@ import Image from "next/image";
 import getFileType from "../../lib/getFileType";
 
 const Post = ({ post }) => {
-  console.log("POST: ", post);
-
   const mediaType = getFileType(post.format);
 
   return (

@@ -1,10 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UserAuth } from "../context/AuthContext";
 import { useForm } from "react-hook-form";
 import { ref, push, update, child, serverTimestamp } from "firebase/database";
 import { storage, db } from "../../lib/firebase";
 import uploadFileToStorage from "../../lib/uploadFileToStorage";
+import { canUserPost } from "../../lib/canUserPost";
 
 const Share = () => {
   const { register, handleSubmit, errors } = useForm();
@@ -62,8 +63,14 @@ const Share = () => {
       return;
     }
 
-    console.log("image: ", image[0]);
-    console.log("draft: ", draft[0]);
+    const userCanPost = await canUserPost(user.uid);
+
+    // check if user is allowed to post
+    if (!userCanPost) {
+      console.error("User not allowed to post");
+      alert("User not allowed to post");
+      return;
+    }
 
     const imageFile = image[0];
     const draftFile = draft[0];
@@ -105,7 +112,7 @@ const Share = () => {
       draft: draftFileUrl,
       format: draftFile.name.split(".").pop(),
       poster: user.uid,
-      // createdAt: serverTimestamp,
+      postedAt: serverTimestamp(),
     };
 
     // Write the new post's data in the posts list
@@ -114,6 +121,9 @@ const Share = () => {
 
     // Update the user's posts list with the new post ID
     updates[`/users/${user.uid}/posts/${newPostKey}`] = true;
+
+    // update Users latest post date
+    updates[`/users/${user.uid}/latestPost`] = serverTimestamp();
 
     setShared(true);
 

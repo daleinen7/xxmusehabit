@@ -45,6 +45,7 @@ export const AuthContextProvider = ({ children }) => {
                 accountabilityNotice: true,
               },
               zipcode: false,
+              latestPost: false,
             });
           }
           // Get user profile
@@ -58,7 +59,7 @@ export const AuthContextProvider = ({ children }) => {
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, googleSignIn, logOut }}>
+    <AuthContext.Provider value={{ user, userProfile, googleSignIn, logOut }}>
       {children}
     </AuthContext.Provider>
   );
