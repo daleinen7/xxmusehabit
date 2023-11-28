@@ -1,9 +1,9 @@
-"use client";
-import { useState, useEffect } from "react";
-import { UserAuth } from "../context/AuthContext";
-import { daysUntilNextPost } from "../../lib/daysUntilNextPost";
-import navData from "../../lib/navData";
-import Link from "next/link";
+'use client';
+import { useState, useEffect } from 'react';
+import { UserAuth } from '../context/AuthContext';
+import { daysUntilNextPost } from '../../lib/daysUntilNextPost';
+import navData from '../../lib/navData';
+import Link from 'next/link';
 
 const NavItem = ({ url, func, text }) => (
   <li key={url} className="text-gray-400 hover:text-white">
@@ -27,7 +27,7 @@ const Nav = () => {
         setCanUserPostState(result.canPost);
         setDaysUntilNextPostState(result.daysUntilNextPost);
       } catch (error) {
-        console.error("Error checking if user can post:", error);
+        console.error('Error checking if user can post:', error);
         // Handle the error if necessary
       }
     };
@@ -40,7 +40,7 @@ const Nav = () => {
     try {
       await googleSignIn();
     } catch (error) {
-      console.log("ERROR: ", error);
+      console.log('ERROR: ', error);
     }
   };
 
@@ -48,7 +48,7 @@ const Nav = () => {
     try {
       await logOut();
     } catch (error) {
-      console.log("ERROR: ", error);
+      console.log('ERROR: ', error);
     }
   };
 
@@ -61,23 +61,14 @@ const Nav = () => {
           </Link>
         </li>
         {navData.map((navItem) => {
-          if (navItem.function === "handleSignIn") navItem.func = handleSignIn;
-          if (navItem.function === "handleLogOut") navItem.func = handleLogOut;
+          if (navItem.function === 'handleSignIn') navItem.func = handleSignIn;
+          if (navItem.function === 'handleLogOut') navItem.func = handleLogOut;
 
-          if (navItem.text === "Share") {
+          if (navItem.text === 'Share') {
             if (canUserPostState) {
-              return (
-                <>
-                  You have {daysUntilNextPostState} days left to post
-                  <NavItem key={navItem.text} {...navItem} />
-                </>
-              );
+              return <NavItem key={navItem.text} {...navItem} />;
             } else {
-              return (
-                <li key={navItem.url}>
-                  Days until you can post: {daysUntilNextPost}
-                </li>
-              );
+              return <li key={navItem.url}>Cannot post yet</li>;
             }
           }
 

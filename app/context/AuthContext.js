@@ -1,13 +1,14 @@
-"use client";
-import { useContext, createContext, useState, useEffect } from "react";
+'use client';
+import { useContext, createContext, useState, useEffect } from 'react';
 import {
   signInWithRedirect,
   signOut,
   onAuthStateChanged,
   GoogleAuthProvider,
-} from "firebase/auth";
-import { auth, db } from "../../lib/firebase";
-import { ref, get, set, onValue, serverTimestamp } from "firebase/database";
+} from 'firebase/auth';
+import { auth, db } from '../../lib/firebase';
+import { ref, get, set, onValue, serverTimestamp } from 'firebase/database';
+import { differenceInDays, addMonths, startOfMonth } from 'date-fns';
 
 const AuthContext = createContext();
 
@@ -37,7 +38,7 @@ export const AuthContextProvider = ({ children }) => {
             // User profile doesn't exist, create a new one
             set(userRef, {
               username: currentUser.displayName,
-              bio: "",
+              bio: '',
               photoURL: currentUser.photoURL,
               joined: serverTimestamp(),
               settings: {
@@ -50,27 +51,45 @@ export const AuthContextProvider = ({ children }) => {
               latestPost: false,
             });
           }
-          // Get user profile
+
           onValue(userRef, (snapshot) => {
-            setUserProfile(snapshot.val());
+            const userData = snapshot.val();
 
             // Calculate canPost and daysUntilNextPost
             const latestPostDate = userData.latestPost
               ? new Date(userData.latestPost)
               : null;
             const today = new Date();
-            console.log("LATEST POST DATE: ", latestPostDate);
-            console.log("TODAY: ", today);
-            const daysSinceLastPost = latestPostDate
-              ? differenceInDays(today, latestPostDate)
-              : null;
-            const daysUntilNext = userData.joined
-              ? differenceInDays(addDays(today, 1), userData.joined)
+
+            // Calculate post date based on joined date
+            const joinedDate = userData.joined
+              ? new Date(userData.joined)
               : null;
 
-            // Update state
-            setCanPost(!latestPostDate || daysSinceLastPost >= 1);
-            setDaysUntilNextPost(daysUntilNext);
+            console.log('date joined: ', joinedDate);
+
+            console.log('latest post date: ', latestPostDate);
+
+            // if (!latestPostDate) {
+            //   // User has never posted
+            //   setCanPost(true);
+            //   setDaysUntilNextPost(null);
+            // } else {
+            //   // User has posted before
+            //   const daysSinceLastPost = differenceInDays(today, latestPostDate);
+
+            //   if (today > postDate) {
+            //     // It's past the post date, wait until the next month
+            //     const nextPostDate = addMonths(postDate, 1);
+            //     setCanPost(false);
+            //     setDaysUntilNextPost(differenceInDays(nextPostDate, today));
+            //   } else {
+            //     // They can post up to the post date
+            //     setCanPost(daysSinceLastPost >= 1);
+            //     setDaysUntilNextPost(daysSinceLastPost);
+            //   }
+            // }
+            setUserProfile(userData);
           });
         });
       }
