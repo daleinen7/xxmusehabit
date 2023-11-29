@@ -1,9 +1,9 @@
-'use client';
-import { useState, useEffect } from 'react';
-import { UserAuth } from '../context/AuthContext';
-import { daysUntilNextPost } from '../../lib/daysUntilNextPost';
-import navData from '../../lib/navData';
-import Link from 'next/link';
+"use client";
+import { useState, useEffect } from "react";
+import { UserAuth } from "../context/AuthContext";
+import { daysUntilNextPost } from "../../lib/daysUntilNextPost";
+import navData from "../../lib/navData";
+import Link from "next/link";
 
 const NavItem = ({ url, func, text }) => (
   <li key={url} className="text-gray-400 hover:text-white">
@@ -16,31 +16,20 @@ const NavItem = ({ url, func, text }) => (
 );
 
 const Nav = () => {
-  const { user, userProfile, googleSignIn, logOut } = UserAuth();
-  const [canUserPostState, setCanUserPostState] = useState(false);
-  const [daysUntilNextPostState, setDaysUntilNextPostState] = useState(null);
-
-  useEffect(() => {
-    const checkUserPostability = async () => {
-      try {
-        const result = await daysUntilNextPost(user?.uid);
-        setCanUserPostState(result.canPost);
-        setDaysUntilNextPostState(result.daysUntilNextPost);
-      } catch (error) {
-        console.error('Error checking if user can post:', error);
-        // Handle the error if necessary
-      }
-    };
-
-    // Check user postability when the component mounts
-    checkUserPostability();
-  }, [user?.uid]);
+  const {
+    user,
+    userProfile,
+    canPost,
+    daysUntilNextPost,
+    googleSignIn,
+    logOut,
+  } = UserAuth();
 
   const handleSignIn = async () => {
     try {
       await googleSignIn();
     } catch (error) {
-      console.log('ERROR: ', error);
+      console.log("ERROR: ", error);
     }
   };
 
@@ -48,7 +37,7 @@ const Nav = () => {
     try {
       await logOut();
     } catch (error) {
-      console.log('ERROR: ', error);
+      console.log("ERROR: ", error);
     }
   };
 
@@ -61,14 +50,12 @@ const Nav = () => {
           </Link>
         </li>
         {navData.map((navItem) => {
-          if (navItem.function === 'handleSignIn') navItem.func = handleSignIn;
-          if (navItem.function === 'handleLogOut') navItem.func = handleLogOut;
+          if (navItem.function === "handleSignIn") navItem.func = handleSignIn;
+          if (navItem.function === "handleLogOut") navItem.func = handleLogOut;
 
-          if (navItem.text === 'Share') {
-            if (canUserPostState) {
+          if (navItem.text === "Share") {
+            if (canPost) {
               return <NavItem key={navItem.text} {...navItem} />;
-            } else {
-              return <li key={navItem.url}>Cannot post yet</li>;
             }
           }
 
@@ -83,6 +70,13 @@ const Nav = () => {
           return null;
         })}
       </ul>
+      {user && (
+        <div>
+          {canPost
+            ? `${daysUntilNextPost} days until post is due`
+            : `Can post again in ${daysUntilNextPost} days`}
+        </div>
+      )}
     </nav>
   );
 };

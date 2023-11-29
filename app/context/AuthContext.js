@@ -1,14 +1,14 @@
-'use client';
-import { useContext, createContext, useState, useEffect } from 'react';
+"use client";
+import { useContext, createContext, useState, useEffect } from "react";
 import {
   signInWithRedirect,
   signOut,
   onAuthStateChanged,
   GoogleAuthProvider,
-} from 'firebase/auth';
-import { auth, db } from '../../lib/firebase';
-import { ref, get, set, onValue, serverTimestamp } from 'firebase/database';
-import { differenceInDays, addMonths, startOfMonth } from 'date-fns';
+} from "firebase/auth";
+import { auth, db } from "../../lib/firebase";
+import { ref, get, set, onValue, serverTimestamp } from "firebase/database";
+import differenceInDays from "date-fns/differenceInDays";
 
 const AuthContext = createContext();
 
@@ -38,7 +38,7 @@ export const AuthContextProvider = ({ children }) => {
             // User profile doesn't exist, create a new one
             set(userRef, {
               username: currentUser.displayName,
-              bio: '',
+              bio: "",
               photoURL: currentUser.photoURL,
               joined: serverTimestamp(),
               settings: {
@@ -55,40 +55,56 @@ export const AuthContextProvider = ({ children }) => {
           onValue(userRef, (snapshot) => {
             const userData = snapshot.val();
 
-            // Calculate canPost and daysUntilNextPost
-            const latestPostDate = userData.latestPost
-              ? new Date(userData.latestPost)
-              : null;
-            const today = new Date();
+            // console.log("userData: ", userData);
 
-            // Calculate post date based on joined date
-            const joinedDate = userData.joined
-              ? new Date(userData.joined)
-              : null;
+            // console.log("latest post date: ", new Date(userData.latestPost));
 
-            console.log('date joined: ', joinedDate);
+            // Calculate daysUntilNextPost
+            // get user start date
+            const userStartDate = new Date(userData.joined).getDate();
+            console.log("userStartDate: ", userStartDate);
+            // get latest post day
+            const latestPostDay = new Date(userData.latestPost).getDate();
+            console.log("latestPost: ", latestPostDay);
+            // get latest post month
+            const latestPostMonth = new Date(userData.latestPost).getMonth();
+            console.log("latestPostMonth: ", latestPostMonth);
+            // get today's date
+            const todaysDate = new Date().getDate();
+            console.log("today: ", todaysDate);
+            // get today's month
+            const todaysMonth = new Date().getMonth();
+            console.log("todayMonth: ", todaysMonth);
 
-            console.log('latest post date: ', latestPostDate);
+            // if userData.latestPost is false, then canPost is true
+            if (!userData.latestPost) {
+              setCanPost(true);
+            }
 
-            // if (!latestPostDate) {
-            //   // User has never posted
-            //   setCanPost(true);
-            //   setDaysUntilNextPost(null);
-            // } else {
-            //   // User has posted before
-            //   const daysSinceLastPost = differenceInDays(today, latestPostDate);
+            let nextPostDate;
 
-            //   if (today > postDate) {
-            //     // It's past the post date, wait until the next month
-            //     const nextPostDate = addMonths(postDate, 1);
-            //     setCanPost(false);
-            //     setDaysUntilNextPost(differenceInDays(nextPostDate, today));
-            //   } else {
-            //     // They can post up to the post date
-            //     setCanPost(daysSinceLastPost >= 1);
-            //     setDaysUntilNextPost(daysSinceLastPost);
-            //   }
-            // }
+            if (latestPostMonth < todaysMonth) {
+              // set nextPostDate to this month on the post date
+              console.log("POST IS THIS MONTH!!!!!!");
+              nextPostDate = new Date(
+                new Date().getFullYear(),
+                todaysMonth,
+                userStartDate
+              );
+            } else {
+              // set nextPostDate to next month on the post date
+              console.log("Post is next month. Got plenty of time .... ");
+              nextPostDate = new Date(
+                new Date().getFullYear(),
+                todaysMonth + 1,
+                userStartDate
+              );
+            }
+
+            console.log("nextPostDate: ", nextPostDate);
+
+            setDaysUntilNextPost(differenceInDays(nextPostDate, new Date()));
+
             setUserProfile(userData);
           });
         });
@@ -96,6 +112,9 @@ export const AuthContextProvider = ({ children }) => {
     });
     return () => unsubscribe();
   }, [user]);
+
+  console.log("canPost: ", canPost);
+  console.log("daysUntilNextPost: ", daysUntilNextPost);
 
   return (
     <AuthContext.Provider
