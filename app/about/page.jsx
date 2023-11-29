@@ -1,12 +1,12 @@
-import getUserPosts from "../../lib/getUserPosts";
+"use client";
 
-const About = async () => {
-  const myPosts = getUserPosts("-Nk3uZtadD-SMopmeGbI");
+const About = () => {
+  // // fetch api at /api/test
+  // const res = await fetch("http://localhost:3000/api/test");
+  // const data = await res.json();
+  // console.log("DATA: ", data);
 
-  // fetch api at /api/test
-  const res = await fetch("http://localhost:3000/api/test");
-  const data = await res.json();
-  console.log("DATA: ", data);
+  // console.log("MY POSTS: ", myPosts);
 
   return (
     <div>

@@ -2,8 +2,6 @@ import Image from "next/image";
 import getFileType from "../../lib/getFileType";
 
 const Post = ({ post }) => {
-  console.log("POST: ", post);
-
   const mediaType = getFileType(post.format);
 
   return (
@@ -12,7 +10,7 @@ const Post = ({ post }) => {
       <h3>{post.title}</h3>
       <p>{post.description}</p>
       {mediaType === "image" && (
-        <Image src={post.image} alt={post.title} width={400} height={240} />
+        <Image src={post.draft} alt={post.title} width={400} height={240} />
       )}
       {mediaType === "video" && (
         <video width={400} height={240} controls>
@@ -20,7 +18,6 @@ const Post = ({ post }) => {
           Your browser does not support the video tag.
         </video>
       )}
-      s
       {mediaType === "audio" && (
         <audio controls>
           <source src={post.draft} />

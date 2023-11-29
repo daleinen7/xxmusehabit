@@ -1,8 +1,8 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { UserAuth } from "../context/AuthContext";
-
-import navData from "@/lib/navData";
+import { daysUntilNextPost } from "../../lib/daysUntilNextPost";
+import navData from "../../lib/navData";
 import Link from "next/link";
 
 const NavItem = ({ url, func, text }) => (
@@ -16,7 +16,14 @@ const NavItem = ({ url, func, text }) => (
 );
 
 const Nav = () => {
-  const { user, userProfile, googleSignIn, logOut } = UserAuth();
+  const {
+    user,
+    userProfile,
+    canPost,
+    daysUntilNextPost,
+    googleSignIn,
+    logOut,
+  } = UserAuth();
 
   const handleSignIn = async () => {
     try {
@@ -36,15 +43,21 @@ const Nav = () => {
 
   return (
     <nav className="p-4">
-      <ul className="flex gap-6">
+      <ul className="flex gap-6 items-center">
         <li>
           <Link href="/">
-            <h1>Musehabit</h1>
+            <h1 className="text-xl">Musehabit</h1>
           </Link>
         </li>
         {navData.map((navItem) => {
           if (navItem.function === "handleSignIn") navItem.func = handleSignIn;
           if (navItem.function === "handleLogOut") navItem.func = handleLogOut;
+
+          if (navItem.text === "Share") {
+            if (canPost) {
+              return <NavItem key={navItem.text} {...navItem} />;
+            }
+          }
 
           if (
             navItem.auth === undefined ||
@@ -57,6 +70,13 @@ const Nav = () => {
           return null;
         })}
       </ul>
+      {user && (
+        <div>
+          {canPost
+            ? `${daysUntilNextPost} days until post is due`
+            : `Can post again in ${daysUntilNextPost} days`}
+        </div>
+      )}
     </nav>
   );
 };
