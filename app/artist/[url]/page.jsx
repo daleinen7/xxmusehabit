@@ -2,6 +2,7 @@
 import { ref, get, equalTo, orderByChild, query } from 'firebase/database';
 import { db } from '../../../lib/firebase';
 import { useState, useEffect } from 'react';
+import Post from '../../../app/components/Post';
 
 export async function getPostsByUser(url) {
   try {
@@ -83,11 +84,7 @@ const ArtistFeed = ({ params }) => {
       <div>
         {posts && posts.length > 0 ? (
           posts.map((post) => (
-            <div key={post.id}>
-              <h3>{post.details.title}</h3>
-              <p>{post.details.description}</p>
-              {/* Render other post details as needed */}
-            </div>
+            <Post key={post.details.id} post={post.details} />
           ))
         ) : (
           <p>No posts found for this artist.</p>
