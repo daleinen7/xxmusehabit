@@ -62,19 +62,19 @@ export const AuthContextProvider = ({ children }) => {
             // Calculate daysUntilNextPost
             // get user start date
             const userStartDate = new Date(userData.joined).getDate();
-            console.log("userStartDate: ", userStartDate);
+            // console.log("userStartDate: ", userStartDate);
             // get latest post day
             const latestPostDay = new Date(userData.latestPost).getDate();
-            console.log("latestPost: ", latestPostDay);
+            // console.log("latestPost: ", latestPostDay);
             // get latest post month
             const latestPostMonth = new Date(userData.latestPost).getMonth();
-            console.log("latestPostMonth: ", latestPostMonth);
+            // console.log("latestPostMonth: ", latestPostMonth);
             // get today's date
             const todaysDate = new Date().getDate();
-            console.log("today: ", todaysDate);
+            // console.log("today: ", todaysDate);
             // get today's month
             const todaysMonth = new Date().getMonth();
-            console.log("todayMonth: ", todaysMonth);
+            // console.log("todayMonth: ", todaysMonth);
 
             // if userData.latestPost is false, then canPost is true
             if (!userData.latestPost) {
@@ -85,7 +85,7 @@ export const AuthContextProvider = ({ children }) => {
 
             if (latestPostMonth < todaysMonth) {
               // set nextPostDate to this month on the post date
-              console.log("POST IS THIS MONTH!!!!!!");
+              // console.log("POST IS THIS MONTH!!!!!!");
               nextPostDate = new Date(
                 new Date().getFullYear(),
                 todaysMonth,
@@ -93,7 +93,7 @@ export const AuthContextProvider = ({ children }) => {
               );
             } else {
               // set nextPostDate to next month on the post date
-              console.log("Post is next month. Got plenty of time .... ");
+              // console.log("Post is next month. Got plenty of time .... ");
               nextPostDate = new Date(
                 new Date().getFullYear(),
                 todaysMonth + 1,
@@ -101,7 +101,7 @@ export const AuthContextProvider = ({ children }) => {
               );
             }
 
-            console.log("nextPostDate: ", nextPostDate);
+            // console.log("nextPostDate: ", nextPostDate);
 
             setDaysUntilNextPost(differenceInDays(nextPostDate, new Date()));
 
@@ -113,8 +113,8 @@ export const AuthContextProvider = ({ children }) => {
     return () => unsubscribe();
   }, [user]);
 
-  console.log("canPost: ", canPost);
-  console.log("daysUntilNextPost: ", daysUntilNextPost);
+  // console.log("canPost: ", canPost);
+  // console.log("daysUntilNextPost: ", daysUntilNextPost);
 
   return (
     <AuthContext.Provider
