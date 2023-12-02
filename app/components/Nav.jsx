@@ -1,9 +1,9 @@
-"use client";
-import { useState, useEffect } from "react";
-import { UserAuth } from "../context/AuthContext";
-import { daysUntilNextPost } from "../../lib/daysUntilNextPost";
-import navData from "../../lib/navData";
-import Link from "next/link";
+'use client';
+import { useState, useEffect } from 'react';
+import { UserAuth } from '../context/AuthContext';
+import { daysUntilNextPost } from '../../lib/daysUntilNextPost';
+import navData from '../../lib/navData';
+import Link from 'next/link';
 
 const NavItem = ({ url, func, text }) => (
   <li key={url} className="text-gray-400 hover:text-white">
@@ -29,7 +29,7 @@ const Nav = () => {
     try {
       await googleSignIn();
     } catch (error) {
-      console.log("ERROR: ", error);
+      console.log('ERROR: ', error);
     }
   };
 
@@ -37,7 +37,7 @@ const Nav = () => {
     try {
       await logOut();
     } catch (error) {
-      console.log("ERROR: ", error);
+      console.log('ERROR: ', error);
     }
   };
 
@@ -50,10 +50,10 @@ const Nav = () => {
           </Link>
         </li>
         {navData.map((navItem) => {
-          if (navItem.function === "handleSignIn") navItem.func = handleSignIn;
-          if (navItem.function === "handleLogOut") navItem.func = handleLogOut;
+          if (navItem.function === 'handleSignIn') navItem.func = handleSignIn;
+          if (navItem.function === 'handleLogOut') navItem.func = handleLogOut;
 
-          if (navItem.text === "Share") {
+          if (navItem.text === 'Share') {
             if (canPost) {
               return <NavItem key={navItem.text} {...navItem} />;
             }
