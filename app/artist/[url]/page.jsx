@@ -79,9 +79,6 @@ const ArtistFeed = ({ params }) => {
     fetchPosts();
   }, [params.url]);
 
-  console.log("posts", posts);
-  console.log("poster", poster);
-
   return loading ? (
     <p>Loading...</p>
   ) : (
