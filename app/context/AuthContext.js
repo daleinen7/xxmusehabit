@@ -71,8 +71,6 @@ export const AuthContextProvider = ({ children }) => {
 
       await updateProfile(userCredential.user, { displayName });
 
-      console.log('Right after the creation: ', userCredential);
-
       setUser(userCredential.user);
       // Rest of your code...
     } catch (error) {
@@ -92,7 +90,6 @@ export const AuthContextProvider = ({ children }) => {
         get(userRef).then((snapshot) => {
           if (!snapshot.exists()) {
             // User profile doesn't exist, create a new one
-
             set(userRef, {
               username: currentUser.displayName,
               url:

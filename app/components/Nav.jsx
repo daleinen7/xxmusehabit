@@ -28,7 +28,6 @@ const Nav = () => {
   } = UserAuth();
 
   const handleSignIn = async () => {
-    console.log('Hi there login');
     try {
       // await googleSignIn();
       await emailSignIn('user@example.com', 'password123');
@@ -38,7 +37,6 @@ const Nav = () => {
   };
 
   const handleSignUp = async () => {
-    console.log('Hi there signup');
     try {
       await emailSignUp('user@example.com', 'password123');
     } catch (error) {
