@@ -1,13 +1,27 @@
 'use client';
-import { useContext, createContext, useState, useEffect } from 'react';
+import {
+  useContext,
+  createContext,
+  useState,
+  useEffect,
+} from 'react';
 import {
   signInWithRedirect,
   signOut,
   onAuthStateChanged,
   GoogleAuthProvider,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
 } from 'firebase/auth';
 import { auth, db } from '../../lib/firebase';
-import { ref, get, set, onValue, serverTimestamp } from 'firebase/database';
+import {
+  ref,
+  get,
+  set,
+  onValue,
+  serverTimestamp,
+} from 'firebase/database';
 import slugify from '../../lib/slugify';
 import differenceInDays from 'date-fns/differenceInDays';
 
@@ -28,6 +42,47 @@ export const AuthContextProvider = ({ children }) => {
     signOut(auth);
   };
 
+  const emailSignIn = async (email, password) => {
+    try {
+      // Sign in with email and password
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      setUser(userCredential.user);
+      // Rest of your code...
+    } catch (error) {
+      console.error(
+        'Error signing in with email and password:',
+        error
+      );
+    }
+  };
+
+  const emailSignUp = async (email, password, displayName) => {
+    try {
+      // Create a new user with email and password
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      await updateProfile(userCredential.user, { displayName });
+
+      console.log('Right after the creation: ', userCredential);
+
+      setUser(userCredential.user);
+      // Rest of your code...
+    } catch (error) {
+      console.error(
+        'Error signing up with email and password:',
+        error
+      );
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -37,9 +92,12 @@ export const AuthContextProvider = ({ children }) => {
         get(userRef).then((snapshot) => {
           if (!snapshot.exists()) {
             // User profile doesn't exist, create a new one
+
             set(userRef, {
               username: currentUser.displayName,
-              url: slugify(currentUser.displayName),
+              url:
+                currentUser.displayName &&
+                slugify(currentUser.displayName),
               bio: '',
               photoURL: currentUser.photoURL,
               joined: serverTimestamp(),
@@ -62,10 +120,14 @@ export const AuthContextProvider = ({ children }) => {
             const userStartDate = new Date(userData.joined).getDate();
 
             // get latest post day
-            const latestPostDay = new Date(userData.latestPost).getDate();
+            const latestPostDay = new Date(
+              userData.latestPost
+            ).getDate();
 
             // get latest post month
-            const latestPostMonth = new Date(userData.latestPost).getMonth();
+            const latestPostMonth = new Date(
+              userData.latestPost
+            ).getMonth();
 
             // get today's date
             const todaysDate = new Date().getDate();
@@ -86,7 +148,7 @@ export const AuthContextProvider = ({ children }) => {
               nextPostDate = new Date(
                 new Date().getFullYear(),
                 todaysMonth,
-                userStartDate,
+                userStartDate
               );
             } else {
               // set nextPostDate to next month on the post date
@@ -94,7 +156,7 @@ export const AuthContextProvider = ({ children }) => {
               nextPostDate = new Date(
                 new Date().getFullYear(),
                 todaysMonth + 1,
-                userStartDate,
+                userStartDate
               );
             }
 
@@ -107,7 +169,9 @@ export const AuthContextProvider = ({ children }) => {
             // console.log('todayMonth: ', todaysMonth);
             // console.log('nextPostDate: ', nextPostDate);
 
-            setDaysUntilNextPost(differenceInDays(nextPostDate, new Date()));
+            setDaysUntilNextPost(
+              differenceInDays(nextPostDate, new Date())
+            );
 
             setUserProfile(userData);
           });
@@ -127,6 +191,8 @@ export const AuthContextProvider = ({ children }) => {
         userProfile,
         canPost,
         daysUntilNextPost,
+        emailSignUp,
+        emailSignIn,
         googleSignIn,
         logOut,
       }}

@@ -22,12 +22,25 @@ const Nav = () => {
     canPost,
     daysUntilNextPost,
     googleSignIn,
+    emailSignUp,
+    emailSignIn,
     logOut,
   } = UserAuth();
 
   const handleSignIn = async () => {
+    console.log('Hi there login');
     try {
-      await googleSignIn();
+      // await googleSignIn();
+      await emailSignIn('user@example.com', 'password123');
+    } catch (error) {
+      console.log('ERROR: ', error);
+    }
+  };
+
+  const handleSignUp = async () => {
+    console.log('Hi there signup');
+    try {
+      await emailSignUp('user@example.com', 'password123');
     } catch (error) {
       console.log('ERROR: ', error);
     }
@@ -50,8 +63,12 @@ const Nav = () => {
           </Link>
         </li>
         {navData.map((navItem) => {
-          if (navItem.function === 'handleSignIn') navItem.func = handleSignIn;
-          if (navItem.function === 'handleLogOut') navItem.func = handleLogOut;
+          if (navItem.function === 'handleSignIn')
+            navItem.func = handleSignIn;
+          if (navItem.function === 'handleSignUp')
+            navItem.func = handleSignUp;
+          if (navItem.function === 'handleLogOut')
+            navItem.func = handleLogOut;
 
           if (navItem.text === 'Share') {
             if (canPost) {
