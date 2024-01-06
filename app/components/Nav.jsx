@@ -16,33 +16,8 @@ const NavItem = ({ url, func, text }) => (
 );
 
 const Nav = () => {
-  const {
-    user,
-    userProfile,
-    canPost,
-    daysUntilNextPost,
-    googleSignIn,
-    emailSignUp,
-    emailSignIn,
-    logOut,
-  } = UserAuth();
-
-  const handleSignIn = async () => {
-    try {
-      // await googleSignIn();
-      await emailSignIn('user@example.com', 'password123');
-    } catch (error) {
-      console.log('ERROR: ', error);
-    }
-  };
-
-  const handleSignUp = async () => {
-    try {
-      await emailSignUp('user@example.com', 'password123');
-    } catch (error) {
-      console.log('ERROR: ', error);
-    }
-  };
+  const { user, userProfile, canPost, daysUntilNextPost, logOut } =
+    UserAuth();
 
   const handleLogOut = async () => {
     try {
@@ -61,10 +36,6 @@ const Nav = () => {
           </Link>
         </li>
         {navData.map((navItem) => {
-          if (navItem.function === 'handleSignIn')
-            navItem.func = handleSignIn;
-          if (navItem.function === 'handleSignUp')
-            navItem.func = handleSignUp;
           if (navItem.function === 'handleLogOut')
             navItem.func = handleLogOut;
 
