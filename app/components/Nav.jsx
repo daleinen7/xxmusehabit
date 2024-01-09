@@ -16,22 +16,8 @@ const NavItem = ({ url, func, text }) => (
 );
 
 const Nav = () => {
-  const {
-    user,
-    userProfile,
-    canPost,
-    daysUntilNextPost,
-    googleSignIn,
-    logOut,
-  } = UserAuth();
-
-  const handleSignIn = async () => {
-    try {
-      await googleSignIn();
-    } catch (error) {
-      console.log('ERROR: ', error);
-    }
-  };
+  const { user, userProfile, canPost, daysUntilNextPost, logOut } =
+    UserAuth();
 
   const handleLogOut = async () => {
     try {
@@ -50,8 +36,8 @@ const Nav = () => {
           </Link>
         </li>
         {navData.map((navItem) => {
-          if (navItem.function === 'handleSignIn') navItem.func = handleSignIn;
-          if (navItem.function === 'handleLogOut') navItem.func = handleLogOut;
+          if (navItem.function === 'handleLogOut')
+            navItem.func = handleLogOut;
 
           if (navItem.text === 'Share') {
             if (canPost) {
