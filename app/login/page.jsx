@@ -73,10 +73,21 @@ const Login = () => {
                 />
               </label>
             ))}
-            <button type="submit" className="mt-6 ">
-              Sign up
+            <button
+              type="submit"
+              className="mt-6 bg-gray-400 rounded-md px-[0.875] py-[0.625rem]"
+            >
+              Log In
             </button>
           </form>
+
+          <div className="">Or</div>
+          <button
+            type="button"
+            className="mt-6 border-black rounded-md px-[0.875] py-[0.625rem]"
+          >
+            Log In with Google
+          </button>
         </div>
       </div>
     </div>
