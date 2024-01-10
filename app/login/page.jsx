@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { UserAuth } from '../context/AuthContext';
 
@@ -28,12 +29,21 @@ const Login = () => {
 
   const router = useRouter();
 
-  const { emailSignIn } = UserAuth();
+  const { emailSignIn, googleSignIn } = UserAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     await emailSignIn(form.email, form.password);
     router.push('/');
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await googleSignIn();
+      router.push('/');
+    } catch (error) {
+      console.log('ERROR: ', error);
+    }
   };
 
   const handleFormChange = (e) => {
@@ -51,17 +61,16 @@ const Login = () => {
       </div>
       <div className="w-1/2 flex items-center justify-center">
         <div className="max-w-47rem flex flex-col justify-center items-center w-full max-w-[20.8125rem]">
-          <h2>Log In</h2>
+          <h2 className=" font-hepta text-[2.25rem] font-bold">Log In</h2>
+          <p className=" font-satoshi">
+            Need an account? <Link href="/signup">Sign Up.</Link>
+          </p>
           <form
             onSubmit={handleSubmit}
             className="flex flex-col justify-center gap-6 w-full"
           >
             {formData.map((item) => (
-              <label
-                htmlFor={item.id}
-                key={item.id}
-                className="flex flex-col"
-              >
+              <label htmlFor={item.id} key={item.id} className="flex flex-col">
                 {item.label}
                 <input
                   type={item.type}
@@ -85,6 +94,7 @@ const Login = () => {
           <button
             type="button"
             className="mt-6 border-black rounded-md px-[0.875] py-[0.625rem]"
+            onClick={handleGoogleSignIn}
           >
             Log In with Google
           </button>

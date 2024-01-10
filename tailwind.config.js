@@ -6,6 +6,11 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    fontFamily: {
+      satoshi: ['var(--font-satoshi)'],
+      satoshiItalic: ['var(--font-satoshi-italic)'],
+      hepta: ['var(--font-hepta)'],
+    },
     extend: {},
   },
   plugins: [],
