@@ -68,17 +68,15 @@ const SignUp = () => {
       </div>
       <div className="w-1/2 flex items-center justify-center">
         <div className="max-w-47rem flex flex-col justify-center items-center w-full max-w-[20.8125rem]">
-          <h2>Sign up</h2>
+          <h2 className="font-satoshi text-[2.25rem] font-bold mb-[1.125rem]">
+            Sign up
+          </h2>
           <form
             onSubmit={handleSubmit}
             className="flex flex-col justify-center gap-6 w-full"
           >
             {formData.map((item) => (
-              <label
-                htmlFor={item.id}
-                key={item.id}
-                className="flex flex-col"
-              >
+              <label htmlFor={item.id} key={item.id} className="flex flex-col">
                 {item.label}
                 <input
                   type={item.type}
@@ -97,10 +95,10 @@ const SignUp = () => {
               Sign up
             </button>
           </form>
-          <div className="">Or</div>
+          <div className="py-10 text-[1.125rem] font-medium">Or</div>
           <button
             type="button"
-            className="mt-6 border-black rounded-md px-[0.875] py-[0.625rem]"
+            className="border border-black rounded-md px-[0.875rem] py-[0.625rem]"
             onClick={handleGoogleSignIn}
           >
             Log In with Google

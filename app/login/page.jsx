@@ -61,9 +61,14 @@ const Login = () => {
       </div>
       <div className="w-1/2 flex items-center justify-center">
         <div className="max-w-47rem flex flex-col justify-center items-center w-full max-w-[20.8125rem]">
-          <h2 className=" font-hepta text-[2.25rem] font-bold">Log In</h2>
-          <p className=" font-satoshi">
-            Need an account? <Link href="/signup">Sign Up.</Link>
+          <h2 className="font-satoshi text-[2.25rem] font-bold mb-[1.125rem">
+            Log In
+          </h2>
+          <p className="font-satoshi mb-10">
+            Need an account?{' '}
+            <Link href="/signup" className="underline">
+              Sign Up.
+            </Link>
           </p>
           <form
             onSubmit={handleSubmit}
@@ -90,10 +95,10 @@ const Login = () => {
             </button>
           </form>
 
-          <div className="">Or</div>
+          <div className="py-10 text-[1.125rem] font-medium">Or</div>
           <button
             type="button"
-            className="mt-6 border-black rounded-md px-[0.875] py-[0.625rem]"
+            className="border border-black rounded-md px-[0.875rem] py-[0.625rem]"
             onClick={handleGoogleSignIn}
           >
             Log In with Google
