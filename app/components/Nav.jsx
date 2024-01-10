@@ -6,7 +6,7 @@ import navData from '../../lib/navData';
 import Link from 'next/link';
 
 const NavItem = ({ url, func, text }) => (
-  <li key={url} className="text-gray-400 hover:text-white">
+  <li key={url} className="text-gray-400 hover:text-black">
     {url ? (
       <Link href={url}>{text}</Link>
     ) : (
@@ -16,8 +16,7 @@ const NavItem = ({ url, func, text }) => (
 );
 
 const Nav = () => {
-  const { user, userProfile, canPost, daysUntilNextPost, logOut } =
-    UserAuth();
+  const { user, userProfile, canPost, daysUntilNextPost, logOut } = UserAuth();
 
   const handleLogOut = async () => {
     try {
@@ -36,8 +35,7 @@ const Nav = () => {
           </Link>
         </li>
         {navData.map((navItem) => {
-          if (navItem.function === 'handleLogOut')
-            navItem.func = handleLogOut;
+          if (navItem.function === 'handleLogOut') navItem.func = handleLogOut;
 
           if (navItem.text === 'Share') {
             if (canPost) {

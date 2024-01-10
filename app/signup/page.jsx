@@ -3,6 +3,30 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { UserAuth } from '../context/AuthContext';
 
+const formData = [
+  {
+    id: 'email',
+    type: 'email',
+    label: 'Email',
+    placeholder: 'email',
+    required: true,
+  },
+  {
+    id: 'username',
+    type: 'text',
+    label: 'Username',
+    placeholder: 'username',
+    required: true,
+  },
+  {
+    id: 'password',
+    type: 'password',
+    label: 'Password',
+    placeholder: 'password',
+    required: true,
+  },
+];
+
 const SignUp = () => {
   const [form, setForm] = useState({
     email: '',
@@ -12,7 +36,7 @@ const SignUp = () => {
 
   const router = useRouter();
 
-  const { emailSignUp } = UserAuth();
+  const { emailSignUp, googleSignIn } = UserAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,37 +44,67 @@ const SignUp = () => {
     router.push('/');
   };
 
+  const handleGoogleSignIn = async () => {
+    try {
+      await googleSignIn();
+      router.push('/');
+    } catch (error) {
+      console.log('ERROR: ', error);
+    }
+  };
+
   const handleFormChange = (e) => {
     setForm({ ...form, [e.target.id]: e.target.value });
   };
 
   return (
-    <div>
-      <h2>Sign up</h2>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          value={form.email}
-          onChange={handleFormChange}
+    <div className="flex w-full">
+      <div className="w-1/2 object-cover h-[calc(100vh-3rem)] ">
+        <img
+          src="https://fakeimg.pl/756x900/c1c1c1/909090"
+          alt="login page"
+          className="w-full h-full object-cover"
         />
-        <label htmlFor="username">Username</label>
-        <input
-          type="username"
-          id="username"
-          value={form.username}
-          onChange={handleFormChange}
-        />
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          value={form.password}
-          onChange={handleFormChange}
-        />
-        <button type="submit">Sign up</button>
-      </form>
+      </div>
+      <div className="w-1/2 flex items-center justify-center">
+        <div className="max-w-47rem flex flex-col justify-center items-center w-full max-w-[20.8125rem]">
+          <h2 className="font-satoshi text-[2.25rem] font-bold mb-[1.125rem]">
+            Sign up
+          </h2>
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col justify-center gap-6 w-full"
+          >
+            {formData.map((item) => (
+              <label htmlFor={item.id} key={item.id} className="flex flex-col">
+                {item.label}
+                <input
+                  type={item.type}
+                  id={item.id}
+                  value={form[item.id]}
+                  onChange={handleFormChange}
+                  required={item.required}
+                  className="text-black p-[0.625rem] border border-black rounded-md w-full"
+                />
+              </label>
+            ))}
+            <button
+              type="submit"
+              className="mt-6 bg-gray-400 rounded-md px-[0.875] py-[0.625rem]"
+            >
+              Sign up
+            </button>
+          </form>
+          <div className="py-10 text-[1.125rem] font-medium">Or</div>
+          <button
+            type="button"
+            className="border border-black rounded-md px-[0.875rem] py-[0.625rem]"
+            onClick={handleGoogleSignIn}
+          >
+            Log In with Google
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
