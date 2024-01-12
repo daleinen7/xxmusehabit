@@ -1,7 +1,7 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { confirmPasswordReset } from 'firebase/auth';
 
 const formData = [
@@ -27,9 +27,8 @@ const ResetPassword = () => {
   });
 
   const router = useRouter();
-  const { oobCode } = router.query;
-
-  const {} = UserAuth(); // what do I put here?
+  const searchParams = useSearchParams();
+  const oobCode = searchParams.get('oobCode');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
