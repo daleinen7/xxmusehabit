@@ -1,27 +1,17 @@
 'use client';
-import {
-  useContext,
-  createContext,
-  useState,
-  useEffect,
-} from 'react';
+import { useContext, createContext, useState, useEffect } from 'react';
 import {
   signInWithRedirect,
   signOut,
   onAuthStateChanged,
   GoogleAuthProvider,
+  sendPasswordResetEmail,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
 } from 'firebase/auth';
 import { auth, db } from '../../lib/firebase';
-import {
-  ref,
-  get,
-  set,
-  onValue,
-  serverTimestamp,
-} from 'firebase/database';
+import { ref, get, set, onValue, serverTimestamp } from 'firebase/database';
 import slugify from '../../lib/slugify';
 import differenceInDays from 'date-fns/differenceInDays';
 
@@ -42,6 +32,16 @@ export const AuthContextProvider = ({ children }) => {
     signOut(auth);
   };
 
+  const passwordReset = async (email) => {
+    try {
+      console.log('EMAIL: ', email);
+      await sendPasswordResetEmail(auth, email);
+      console.log('RESET EMAIL SENT');
+    } catch (error) {
+      console.error('Error sending password reset email:', error);
+    }
+  };
+
   const emailSignIn = async (email, password) => {
     try {
       // Sign in with email and password
@@ -53,10 +53,7 @@ export const AuthContextProvider = ({ children }) => {
       setUser(userCredential.user);
       // Rest of your code...
     } catch (error) {
-      console.error(
-        'Error signing in with email and password:',
-        error
-      );
+      console.error('Error signing in with email and password:', error);
     }
   };
 
@@ -74,10 +71,7 @@ export const AuthContextProvider = ({ children }) => {
       setUser(userCredential.user);
       // Rest of your code...
     } catch (error) {
-      console.error(
-        'Error signing up with email and password:',
-        error
-      );
+      console.error('Error signing up with email and password:', error);
     }
   };
 
@@ -92,9 +86,7 @@ export const AuthContextProvider = ({ children }) => {
             // User profile doesn't exist, create a new one
             set(userRef, {
               username: currentUser.displayName,
-              url:
-                currentUser.displayName &&
-                slugify(currentUser.displayName),
+              url: currentUser.displayName && slugify(currentUser.displayName),
               bio: '',
               photoURL: currentUser.photoURL,
               joined: serverTimestamp(),
@@ -117,14 +109,10 @@ export const AuthContextProvider = ({ children }) => {
             const userStartDate = new Date(userData.joined).getDate();
 
             // get latest post day
-            const latestPostDay = new Date(
-              userData.latestPost
-            ).getDate();
+            const latestPostDay = new Date(userData.latestPost).getDate();
 
             // get latest post month
-            const latestPostMonth = new Date(
-              userData.latestPost
-            ).getMonth();
+            const latestPostMonth = new Date(userData.latestPost).getMonth();
 
             // get today's date
             const todaysDate = new Date().getDate();
@@ -166,9 +154,7 @@ export const AuthContextProvider = ({ children }) => {
             // console.log('todayMonth: ', todaysMonth);
             // console.log('nextPostDate: ', nextPostDate);
 
-            setDaysUntilNextPost(
-              differenceInDays(nextPostDate, new Date())
-            );
+            setDaysUntilNextPost(differenceInDays(nextPostDate, new Date()));
 
             setUserProfile(userData);
           });
@@ -188,6 +174,7 @@ export const AuthContextProvider = ({ children }) => {
         userProfile,
         canPost,
         daysUntilNextPost,
+        passwordReset,
         emailSignUp,
         emailSignIn,
         googleSignIn,
