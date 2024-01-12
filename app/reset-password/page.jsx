@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { confirmPasswordReset } from 'firebase/auth';
+import { auth } from '../../lib/firebase';
 import FormInput from '../components/FormInput';
 
 const formData = [
@@ -42,7 +43,7 @@ const ResetPassword = () => {
     }
 
     try {
-      await confirmPasswordReset(oobCode, newPassword);
+      await confirmPasswordReset(auth, oobCode, newPassword);
       // Password reset successful, you can now redirect the user
       // router.push('/login');
       setSuccess(true);
