@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { confirmPasswordReset } from 'firebase/auth';
-import { auth } from '../lib/firebase';
+import { auth } from '../../lib/firebase';
 import FormInput from '../components/FormInput';
 
 const formData = [
