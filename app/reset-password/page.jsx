@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { UserAuth } from '../context/AuthContext';
+import { confirmPasswordReset } from 'firebase/auth';
 
 const formData = [
   {
@@ -27,19 +27,26 @@ const ResetPassword = () => {
   });
 
   const router = useRouter();
+  const { oobCode } = router.query;
 
-  const { passwordReset } = UserAuth();
+  const {} = UserAuth(); // what do I put here?
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.email) {
-      // Call the sendPasswordResetEmail function
-      await passwordReset(form.email);
-      // Inform the user that a password reset email has been sent
-      console.log('Password reset email sent. Check your inbox.');
-    } else {
-      // Handle the case where no email is provided
-      console.error('Please enter your email address to reset your password.');
+    const { newPassword, confirmPassword } = form;
+
+    if (newPassword !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+
+    try {
+      await confirmPasswordReset(auth, oobCode, newPassword);
+      // Password reset successful, you can now redirect the user
+      router.push('/login');
+    } catch (error) {
+      console.error('Error resetting password:', error);
+      alert('Password reset failed. Please try again.');
     }
   };
 
