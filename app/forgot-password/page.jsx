@@ -12,37 +12,27 @@ const formData = [
     placeholder: 'email',
     required: true,
   },
-  {
-    id: 'password',
-    type: 'password',
-    label: 'Password',
-    placeholder: 'password',
-    required: true,
-  },
 ];
 
-const Login = () => {
+const ForgotPassword = () => {
   const [form, setForm] = useState({
     email: '',
-    password: '',
   });
 
   const router = useRouter();
 
-  const { emailSignIn, googleSignIn } = UserAuth();
+  const { passwordReset } = UserAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await emailSignIn(form.email, form.password);
-    router.push('/');
-  };
-
-  const handleGoogleSignIn = async () => {
-    try {
-      await googleSignIn();
-      router.push('/');
-    } catch (error) {
-      console.log('ERROR: ', error);
+    if (form.email) {
+      // Call the sendPasswordResetEmail function
+      await passwordReset(form.email);
+      // Inform the user that a password reset email has been sent
+      console.log('Password reset email sent. Check your inbox.');
+    } else {
+      // Handle the case where no email is provided
+      console.error('Please enter your email address to reset your password.');
     }
   };
 
@@ -62,13 +52,11 @@ const Login = () => {
       <div className="w-1/2 flex items-center justify-center">
         <div className="max-w-47rem flex flex-col justify-center items-center w-full max-w-[20.8125rem]">
           <h2 className="font-satoshi text-[2.25rem] font-bold mb-[1.125rem">
-            Log In
+            Forgot Your Password?
           </h2>
           <p className="font-satoshi mb-10">
-            Need an account?{' '}
-            <Link href="/signup" className="underline">
-              Sign Up.
-            </Link>
+            Need an account? It happens! We&apos;ll send password reset
+            instructions to your email.
           </p>
           <form
             onSubmit={handleSubmit}
@@ -87,28 +75,16 @@ const Login = () => {
                 />
               </label>
             ))}
-            <Link href="forgot-password" className="underline">
-              Forgot Password
-            </Link>
             <button
               type="submit"
               className="mt-6 bg-gray-400 rounded-md px-[0.875] py-[0.625rem]"
             >
-              Log In
+              Verify Email
             </button>
           </form>
-
-          <div className="py-10 text-[1.125rem] font-medium">Or</div>
-          <button
-            type="button"
-            className="border border-black rounded-md px-[0.875rem] py-[0.625rem]"
-            onClick={handleGoogleSignIn}
-          >
-            Log In with Google
-          </button>
         </div>
       </div>
     </div>
   );
 };
-export default Login;
+export default ForgotPassword;
