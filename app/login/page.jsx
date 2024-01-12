@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { UserAuth } from '../context/AuthContext';
+import FormInput from '../components/FormInput';
 
 const formData = [
   {
@@ -75,17 +76,16 @@ const Login = () => {
             className="flex flex-col justify-center gap-6 w-full"
           >
             {formData.map((item) => (
-              <label htmlFor={item.id} key={item.id} className="flex flex-col">
-                {item.label}
-                <input
-                  type={item.type}
-                  id={item.id}
-                  value={form[item.id]}
-                  onChange={handleFormChange}
-                  required={item.required}
-                  className="text-black p-[0.625rem] border border-black rounded-md w-full"
-                />
-              </label>
+              <FormInput
+                key={item.id}
+                label={item.label}
+                type={item.type}
+                id={item.id}
+                value={form[item.id]}
+                handleFormChange={handleFormChange}
+                required={item.required}
+                className="text-black p-[0.625rem] border border-black rounded-md w-full"
+              />
             ))}
             <Link href="forgot-password" className="underline">
               Forgot Password
