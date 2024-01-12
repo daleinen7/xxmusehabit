@@ -8,14 +8,14 @@ import FormInput from '../components/FormInput';
 
 const formData = [
   {
-    id: 'new-password',
+    id: 'password',
     type: 'password',
     label: 'New Password',
     placeholder: 'password',
     required: true,
   },
   {
-    id: 'confirm-password',
+    id: 'confirm',
     type: 'password',
     label: 'Confirm Password',
     placeholder: 'confirm password',
@@ -35,19 +35,19 @@ const ResetPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { newPassword, confirmPassword } = form;
+    const { password, confirm } = form;
 
     console.log('oobCode:', oobCode);
-    console.log('newPassword:', newPassword);
-    console.log('confirmPassword:', confirmPassword);
+    console.log('password:', password);
+    console.log('confirm:', confirm);
 
-    if (newPassword !== confirmPassword) {
+    if (password !== confirm) {
       alert('Passwords do not match');
       return;
     }
 
     try {
-      await confirmPasswordReset(auth, oobCode, newPassword);
+      await confirmPasswordReset(auth, oobCode, password);
       // Password reset successful, you can now redirect the user
       // router.push('/login');
       setSuccess(true);
