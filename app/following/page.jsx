@@ -1,9 +1,9 @@
-"use client";
-import { useState, useEffect } from "react";
-import { ref, get, query, orderByChild, equalTo } from "firebase/database";
-import { db } from "../../lib/firebase";
-import { UserAuth } from "../context/AuthContext";
-import Post from "../components/Post";
+'use client';
+import { useState, useEffect } from 'react';
+import { ref, get, query, orderByChild, equalTo } from 'firebase/database';
+import { db } from '../../lib/firebase';
+import { UserAuth } from '../context/AuthContext';
+import Post from '../components/Post';
 
 export async function getPostsByFollowing(userUid) {
   try {
@@ -13,7 +13,7 @@ export async function getPostsByFollowing(userUid) {
     // Get the followers snapshot
     const followersSnapshot = await get(followersRef);
 
-    console.log("FOLLOW: ", followersSnapshot.val());
+    console.log('FOLLOW: ', followersSnapshot.val());
 
     // Check if the user is following anyone
     if (followersSnapshot.exists()) {
@@ -21,10 +21,10 @@ export async function getPostsByFollowing(userUid) {
       const followedArtists = Object.keys(followersSnapshot.val());
 
       // Create a reference to the 'posts' collection
-      const postsRef = ref(db, "posts");
+      const postsRef = ref(db, 'posts');
 
       // Use query to find posts for the followed artists
-      const postsQuery = query(postsRef, orderByChild("poster"));
+      const postsQuery = query(postsRef, orderByChild('poster'));
 
       // Create an array of individual queries for each followed artist
       const individualQueries = followedArtists.map((artistUid) =>
@@ -41,7 +41,7 @@ export async function getPostsByFollowing(userUid) {
       // Get the posts snapshot
       const postsSnapshot = await get(compoundQuery);
 
-      console.log("POSTS: ", postsSnapshot.val());
+      console.log('POSTS: ', postsSnapshot.val());
 
       // Convert the postsData object to an array
       const postsArray = Object.entries(postsSnapshot.val()).map(
@@ -55,7 +55,7 @@ export async function getPostsByFollowing(userUid) {
       return postsArray;
     }
   } catch (error) {
-    console.error("Error getting posts by following:", error);
+    console.error('Error getting posts by following:', error);
     throw error;
   }
 }
@@ -68,7 +68,7 @@ const FollowingPage = () => {
     async function fetchPosts() {
       const userUid = user.uid; // replace with the actual user UID
       const posts = await getPostsByFollowing(userUid);
-      console.log("POSTS: ", posts);
+      console.log('POSTS: ', posts);
       setPosts(posts);
     }
     if (user && user.uid) fetchPosts();

@@ -34,9 +34,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const passwordReset = async (email) => {
     try {
-      console.log('EMAIL: ', email);
       await sendPasswordResetEmail(auth, email);
-      console.log('RESET EMAIL SENT');
     } catch (error) {
       console.error('Error sending password reset email:', error);
     }
@@ -72,6 +70,35 @@ export const AuthContextProvider = ({ children }) => {
       // Rest of your code...
     } catch (error) {
       console.error('Error signing up with email and password:', error);
+    }
+  };
+
+  const updateUserProfile = async (profileInfo) => {
+    try {
+      await updateProfile(user, { displayName: profileInfo.displayName });
+
+      const userRef = ref(db, `users/${user.uid}`);
+      get(userRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          // User profile doesn't exist, create a new one
+          set(userRef, {
+            username: profileInfo.displayName,
+            url: slugify(profileInfo.displayName),
+            bio: profileInfo.bio,
+            joined: serverTimestamp(),
+            settings: {
+              dayBeforeNotification: true,
+              weekBeforeNotification: true,
+              tenDaysBeforeNotification: true,
+              accountabilityNotice: true,
+            },
+            zipcode: false,
+            latestPost: false,
+          });
+        }
+      });
+    } catch (error) {
+      console.error('Error updating user profile:', error);
     }
   };
 
@@ -174,6 +201,7 @@ export const AuthContextProvider = ({ children }) => {
         userProfile,
         canPost,
         daysUntilNextPost,
+        updateUserProfile,
         passwordReset,
         emailSignUp,
         emailSignIn,

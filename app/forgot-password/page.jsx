@@ -31,7 +31,6 @@ const ForgotPassword = () => {
       // Call the sendPasswordResetEmail function
       await passwordReset(form.email);
       // Inform the user that a password reset email has been sent
-      console.log('Password reset email sent. Check your inbox.');
       setSuccess(true);
     } else {
       // Handle the case where no email is provided
