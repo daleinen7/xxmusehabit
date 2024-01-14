@@ -63,7 +63,8 @@ const EditProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await updateUserProfile(form);
+
+    if (form.profile) await updateUserProfile(form);
   };
 
   return (
