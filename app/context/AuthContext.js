@@ -34,9 +34,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const passwordReset = async (email) => {
     try {
-      console.log('EMAIL: ', email);
       await sendPasswordResetEmail(auth, email);
-      console.log('RESET EMAIL SENT');
     } catch (error) {
       console.error('Error sending password reset email:', error);
     }
@@ -75,6 +73,37 @@ export const AuthContextProvider = ({ children }) => {
     }
   };
 
+  const updateUserProfile = async (profileInfo) => {
+    try {
+      await updateProfile(user, {
+        displayName: profileInfo.displayName,
+        photoURL: profileInfo.profileImageUrl,
+      });
+
+      const userRef = ref(db, `users/${user.uid}`);
+      get(userRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          // User profile doesn't exist, create a new one
+          set(userRef, {
+            username: profileInfo.displayName,
+            url: slugify(profileInfo.displayName),
+            bio: profileInfo.bio,
+            medium: profileInfo.medium,
+            settings: {
+              dayBeforeNotification: true,
+              weekBeforeNotification: true,
+              tenDaysBeforeNotification: true,
+              accountabilityNotice: true,
+            },
+            location: profileInfo.location,
+          });
+        }
+      });
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -88,6 +117,7 @@ export const AuthContextProvider = ({ children }) => {
               username: currentUser.displayName,
               url: currentUser.displayName && slugify(currentUser.displayName),
               bio: '',
+              medium: '',
               photoURL: currentUser.photoURL,
               joined: serverTimestamp(),
               settings: {
@@ -96,7 +126,7 @@ export const AuthContextProvider = ({ children }) => {
                 tenDaysBeforeNotification: true,
                 accountabilityNotice: true,
               },
-              zipcode: false,
+              location: false,
               latestPost: false,
             });
           }
@@ -145,14 +175,14 @@ export const AuthContextProvider = ({ children }) => {
               );
             }
 
-            // console.log('userData: ', userData);
-            // console.log('latest post date: ', new Date(userData.latestPost));
-            // console.log('userStartDate: ', userStartDate);
-            // console.log('latestPost: ', latestPostDay);
-            // console.log('latestPostMonth: ', latestPostMonth);
-            // console.log('today: ', todaysDate);
-            // console.log('todayMonth: ', todaysMonth);
-            // console.log('nextPostDate: ', nextPostDate);
+            console.log('userData: ', userData);
+            console.log('latest post date: ', new Date(userData.latestPost));
+            console.log('userStartDate: ', userStartDate);
+            console.log('latestPost: ', latestPostDay);
+            console.log('latestPostMonth: ', latestPostMonth);
+            console.log('today: ', todaysDate);
+            console.log('todayMonth: ', todaysMonth);
+            console.log('nextPostDate: ', nextPostDate);
 
             setDaysUntilNextPost(differenceInDays(nextPostDate, new Date()));
 
@@ -174,6 +204,7 @@ export const AuthContextProvider = ({ children }) => {
         userProfile,
         canPost,
         daysUntilNextPost,
+        updateUserProfile,
         passwordReset,
         emailSignUp,
         emailSignIn,

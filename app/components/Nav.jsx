@@ -53,6 +53,13 @@ const Nav = () => {
 
           return null;
         })}
+        {user && userProfile && (
+          <li>
+            <Link href={`/artist/${userProfile.url}/profile`}>
+              Your Profile
+            </Link>
+          </li>
+        )}
       </ul>
       {user && (
         <div>

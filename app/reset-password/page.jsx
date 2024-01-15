@@ -37,10 +37,6 @@ const ResetPassword = () => {
     e.preventDefault();
     const { password, confirm } = form;
 
-    console.log('oobCode:', oobCode);
-    console.log('password:', password);
-    console.log('confirm:', confirm);
-
     if (password !== confirm) {
       alert('Passwords do not match');
       return;
