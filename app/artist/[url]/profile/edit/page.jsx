@@ -45,6 +45,7 @@ const EditProfile = () => {
     profileImage: '',
     displayName: '',
     location: '',
+    medium: '',
     bio: '',
   });
 

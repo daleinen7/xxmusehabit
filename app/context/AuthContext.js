@@ -126,7 +126,7 @@ export const AuthContextProvider = ({ children }) => {
                 tenDaysBeforeNotification: true,
                 accountabilityNotice: true,
               },
-              zipcode: false,
+              location: false,
               latestPost: false,
             });
           }
@@ -175,14 +175,14 @@ export const AuthContextProvider = ({ children }) => {
               );
             }
 
-            // console.log('userData: ', userData);
-            // console.log('latest post date: ', new Date(userData.latestPost));
-            // console.log('userStartDate: ', userStartDate);
-            // console.log('latestPost: ', latestPostDay);
-            // console.log('latestPostMonth: ', latestPostMonth);
-            // console.log('today: ', todaysDate);
-            // console.log('todayMonth: ', todaysMonth);
-            // console.log('nextPostDate: ', nextPostDate);
+            console.log('userData: ', userData);
+            console.log('latest post date: ', new Date(userData.latestPost));
+            console.log('userStartDate: ', userStartDate);
+            console.log('latestPost: ', latestPostDay);
+            console.log('latestPostMonth: ', latestPostMonth);
+            console.log('today: ', todaysDate);
+            console.log('todayMonth: ', todaysMonth);
+            console.log('nextPostDate: ', nextPostDate);
 
             setDaysUntilNextPost(differenceInDays(nextPostDate, new Date()));
 

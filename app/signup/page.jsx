@@ -42,17 +42,11 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await emailSignUp(form.email, form.password, form.username);
-    router.push('/');
   };
 
   const handleGoogleSignIn = async () => {
     try {
       await googleSignIn();
-
-      console.log('USER: ', user);
-      console.log('USER PROFILE: ', userProfile);
-      // router.push('/');
-      console.log("YOU'D GO TO THE HOME PAGE");
     } catch (error) {
       console.log('ERROR: ', error);
     }
