@@ -75,7 +75,10 @@ export const AuthContextProvider = ({ children }) => {
 
   const updateUserProfile = async (profileInfo) => {
     try {
-      await updateProfile(user, { displayName: profileInfo.displayName });
+      await updateProfile(user, {
+        displayName: profileInfo.displayName,
+        photoURL: profileInfo.profileImageUrl,
+      });
 
       const userRef = ref(db, `users/${user.uid}`);
       get(userRef).then((snapshot) => {
@@ -85,15 +88,13 @@ export const AuthContextProvider = ({ children }) => {
             username: profileInfo.displayName,
             url: slugify(profileInfo.displayName),
             bio: profileInfo.bio,
-            joined: serverTimestamp(),
             settings: {
               dayBeforeNotification: true,
               weekBeforeNotification: true,
               tenDaysBeforeNotification: true,
               accountabilityNotice: true,
             },
-            zipcode: false,
-            latestPost: false,
+            location: profileInfo.location,
           });
         }
       });

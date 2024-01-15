@@ -1,14 +1,15 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FormInput from '../../../../components/FormInput';
 import { UserAuth } from '@/app/context/AuthContext';
+import { storage } from '@/lib/firebase';
 import uploadFileToStorage from '@/lib/uploadFileToStorage';
 
 const formData = [
   {
-    id: 'profile',
+    id: 'profileImage',
     type: 'file',
-    condition: 'profile',
+    condition: 'profileImage',
     label: 'Upload Profile Image',
   },
   {
@@ -33,17 +34,37 @@ const formData = [
 
 const EditProfile = () => {
   const [form, setForm] = useState({
-    profile: null,
+    profileImage: '',
     displayName: '',
     location: '',
     bio: '',
   });
 
-  const [imagePreview, setImagePreview] = useState(null);
-
   const { user, userProfile, updateUserProfile } = UserAuth();
 
+  const [imagePreview, setImagePreview] = useState(null);
+
   console.log(user, userProfile);
+
+  useEffect(() => {
+    if (user) {
+      setForm((prevForm) => ({
+        ...prevForm,
+        profileImage: user.photoURL || '',
+        displayName: user.displayName || '',
+      }));
+
+      setImagePreview(user.photoURL);
+    }
+
+    if (userProfile) {
+      setForm((prevForm) => ({
+        ...prevForm,
+        location: userProfile.location || '',
+        bio: userProfile.bio || '',
+      }));
+    }
+  }, [user, userProfile]);
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -53,7 +74,7 @@ const EditProfile = () => {
         setImagePreview(event.target.result);
       };
       reader.readAsDataURL(file);
-      setForm({ ...form, profile: file }); // Update form with the selected file
+      setForm({ ...form, profileImage: file });
     }
   };
 
@@ -64,7 +85,19 @@ const EditProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (form.profile) await updateUserProfile(form);
+    if (form.profileImage) {
+      const fileExtension = form.profileImage.name.split('.').pop(); // Get the file extension
+
+      const profileImageUrl = await uploadFileToStorage(
+        storage,
+        `users/${user.uid}/profile.${fileExtension}`,
+        form.profileImage
+      );
+
+      form.profileImageUrl = profileImageUrl;
+    }
+
+    await updateUserProfile(form);
   };
 
   return (
@@ -76,7 +109,7 @@ const EditProfile = () => {
       >
         {formData.map((item) => (
           <div key={item.id}>
-            {item.id === 'profile' ? (
+            {item.id === 'profileImage' ? (
               <>
                 <label htmlFor={item.id} className="block font-bold">
                   {item.label}
