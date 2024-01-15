@@ -37,7 +37,7 @@ const SignUp = () => {
 
   const router = useRouter();
 
-  const { emailSignUp, googleSignIn } = UserAuth();
+  const { emailSignUp, googleSignIn, user, userProfile } = UserAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,7 +48,11 @@ const SignUp = () => {
   const handleGoogleSignIn = async () => {
     try {
       await googleSignIn();
-      router.push('/');
+
+      console.log('USER: ', user);
+      console.log('USER PROFILE: ', userProfile);
+      // router.push('/');
+      console.log("YOU'D GO TO THE HOME PAGE");
     } catch (error) {
       console.log('ERROR: ', error);
     }
@@ -57,6 +61,8 @@ const SignUp = () => {
   const handleFormChange = (e) => {
     setForm({ ...form, [e.target.id]: e.target.value });
   };
+
+  if (userProfile) router.push(`/artist/${userProfile.url}/profile/edit`);
 
   return (
     <div className="flex w-full">

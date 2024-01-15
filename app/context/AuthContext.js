@@ -88,6 +88,7 @@ export const AuthContextProvider = ({ children }) => {
             username: profileInfo.displayName,
             url: slugify(profileInfo.displayName),
             bio: profileInfo.bio,
+            medium: profileInfo.medium,
             settings: {
               dayBeforeNotification: true,
               weekBeforeNotification: true,
@@ -116,6 +117,7 @@ export const AuthContextProvider = ({ children }) => {
               username: currentUser.displayName,
               url: currentUser.displayName && slugify(currentUser.displayName),
               bio: '',
+              medium: '',
               photoURL: currentUser.photoURL,
               joined: serverTimestamp(),
               settings: {

@@ -1,5 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import FormInput from '../../../../components/FormInput';
 import { UserAuth } from '@/app/context/AuthContext';
 import { storage } from '@/lib/firebase';
@@ -15,19 +17,25 @@ const formData = [
   {
     id: 'displayName',
     type: 'text',
-    label: 'Display Name',
+    label: 'What name would you like to be displayed on your profile?',
     placeholder: 'display name',
+  },
+  {
+    id: 'medium',
+    type: 'text',
+    label: 'What kind of work do you do?',
+    placeholder: 'Painter, Sculptor, Theremin composer, etc.',
   },
   {
     id: 'location',
     type: 'text',
-    label: 'Location',
+    label: 'Where are you located?',
     placeholder: 'location',
   },
   {
     id: 'bio',
     type: 'textarea',
-    label: 'Bio',
+    label: 'Tell everyone a little bit about yourself:',
     placeholder: 'bio',
   },
 ];
@@ -44,7 +52,7 @@ const EditProfile = () => {
 
   const [imagePreview, setImagePreview] = useState(null);
 
-  console.log(user, userProfile);
+  const router = useRouter();
 
   useEffect(() => {
     if (user) {
@@ -86,76 +94,102 @@ const EditProfile = () => {
     e.preventDefault();
 
     if (form.profileImage) {
-      const fileExtension = form.profileImage.name.split('.').pop(); // Get the file extension
+      let profileImageUrl = '';
 
-      const profileImageUrl = await uploadFileToStorage(
-        storage,
-        `users/${user.uid}/profile.${fileExtension}`,
-        form.profileImage
-      );
+      if (typeof form.profileImage === 'string') {
+        // If form.profileImage is a string, assume it's a URL (Google profile image URL)
+        profileImageUrl = form.profileImage;
+      } else {
+        // If form.profileImage is a file, proceed with uploading it
+        const fileExtension = form.profileImage.name.split('.').pop();
+        profileImageUrl = await uploadFileToStorage(
+          storage,
+          `users/${user.uid}/profile.${fileExtension}`,
+          form.profileImage
+        );
+      }
 
       form.profileImageUrl = profileImageUrl;
     }
 
     await updateUserProfile(form);
+    router.push(`/artist/${userProfile.url}/profile`);
   };
 
   return (
-    <>
-      <h2>Edit Profile</h2>
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col items-center gap-[1.5rem]"
-      >
-        {formData.map((item) => (
-          <div key={item.id}>
-            {item.id === 'profileImage' ? (
-              <>
-                <label htmlFor={item.id} className="block font-bold">
-                  {item.label}
-                </label>
-                <input
-                  type={item.type}
-                  id={item.id}
-                  onChange={handleFileInputChange}
-                  accept="image/*"
-                  className="hidden"
-                />
-                <label
-                  className="cursor-pointer text-blue-500 hover:text-blue-700"
-                  htmlFor={item.id}
-                >
-                  Choose Image
-                </label>
-                {imagePreview && (
-                  <img
-                    src={imagePreview}
-                    alt="Profile Preview"
-                    className="mt-2 w-32 h-32 object-cover rounded-full"
-                  />
-                )}
-              </>
-            ) : (
-              <FormInput
-                id={item.id}
-                type={item.type}
-                label={item.label}
-                placeholder={item.placeholder}
-                handleFormChange={handleFormChange}
-                value={form[item.id]}
-                profile
-              />
-            )}
-          </div>
-        ))}
-        <button
-          type="submit"
-          className="mt-6 bg-gray-400 rounded-md px-[0.875rem] py-[0.625rem]"
+    user &&
+    userProfile && (
+      <div className="flex flex-col gap-[2.5rem] items-center">
+        <Link
+          href={`/artist/${userProfile.url}/profile`}
+          className="underline self-end"
         >
-          Save Profile Info
-        </button>
-      </form>
-    </>
+          I&apos;ll do this later
+        </Link>
+        {user.displayName ? (
+          <h2 className=" font-satoshi text-[2.25rem] font-bold text-center">
+            Hey {user.displayName}! <br /> Welcome to your Musehabit Profile.
+          </h2>
+        ) : (
+          <h2 className=" font-satoshi text-[2.25rem] font-bold">
+            Edit Profile
+          </h2>
+        )}
+
+        <p className="font-satoshi text-[1.5rem]">
+          Now that you&apos;ve created your account, let&apos;s build it out.
+        </p>
+        {imagePreview && (
+          <img
+            src={imagePreview}
+            alt="Profile Preview"
+            className="mt-2 w-32 h-32 object-cover rounded-full"
+          />
+        )}
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col items-center gap-[1.5rem] w-full"
+        >
+          {formData.map((item) => (
+            <React.Fragment key={item.id}>
+              {item.id === 'profileImage' ? (
+                <>
+                  <label
+                    htmlFor={item.id}
+                    className="rounded border-[1px] border-black px-[1rem] py-[0.625rem] text-[1.125rem] hover:bg-gray-200 cursor-pointer"
+                  >
+                    {item.label}
+                    <input
+                      type={item.type}
+                      id={item.id}
+                      onChange={handleFileInputChange}
+                      accept="image/*"
+                      className="hidden"
+                    />
+                  </label>
+                </>
+              ) : (
+                <FormInput
+                  id={item.id}
+                  type={item.type}
+                  label={item.label}
+                  placeholder={item.placeholder}
+                  handleFormChange={handleFormChange}
+                  value={form[item.id]}
+                  profile
+                />
+              )}
+            </React.Fragment>
+          ))}
+          <button
+            type="submit"
+            className="mt-6 bg-gray-400 rounded-md px-[0.875rem] py-[0.625rem]"
+          >
+            Save Profile Info
+          </button>
+        </form>
+      </div>
+    )
   );
 };
 export default EditProfile;
