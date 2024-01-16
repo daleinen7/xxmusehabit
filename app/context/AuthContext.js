@@ -67,7 +67,24 @@ export const AuthContextProvider = ({ children }) => {
       await updateProfile(userCredential.user, { displayName });
 
       setUser(userCredential.user);
-      // Rest of your code...
+
+      // User profile doesn't exist, create a new one
+      set(userRef, {
+        username: currentUser.displayName,
+        url: currentUser.displayName && slugify(currentUser.displayName),
+        bio: '',
+        medium: '',
+        photoURL: currentUser.photoURL,
+        joined: serverTimestamp(),
+        settings: {
+          dayBeforeNotification: true,
+          weekBeforeNotification: true,
+          tenDaysBeforeNotification: true,
+          accountabilityNotice: true,
+        },
+        location: false,
+        latestPost: false,
+      });
     } catch (error) {
       console.error('Error signing up with email and password:', error);
     }
@@ -112,6 +129,7 @@ export const AuthContextProvider = ({ children }) => {
         const userRef = ref(db, `users/${currentUser.uid}`);
         get(userRef).then((snapshot) => {
           if (!snapshot.exists()) {
+            console.log('so .......... snapshot doesnt exist');
             // User profile doesn't exist, create a new one
             set(userRef, {
               username: currentUser.displayName,
@@ -175,14 +193,14 @@ export const AuthContextProvider = ({ children }) => {
               );
             }
 
-            console.log('userData: ', userData);
-            console.log('latest post date: ', new Date(userData.latestPost));
-            console.log('userStartDate: ', userStartDate);
-            console.log('latestPost: ', latestPostDay);
-            console.log('latestPostMonth: ', latestPostMonth);
-            console.log('today: ', todaysDate);
-            console.log('todayMonth: ', todaysMonth);
-            console.log('nextPostDate: ', nextPostDate);
+            // console.log('userData: ', userData);
+            // console.log('latest post date: ', new Date(userData.latestPost));
+            // console.log('userStartDate: ', userStartDate);
+            // console.log('latestPost: ', latestPostDay);
+            // console.log('latestPostMonth: ', latestPostMonth);
+            // console.log('today: ', todaysDate);
+            // console.log('todayMonth: ', todaysMonth);
+            // console.log('nextPostDate: ', nextPostDate);
 
             setDaysUntilNextPost(differenceInDays(nextPostDate, new Date()));
 
