@@ -37,7 +37,7 @@ const Nav = () => {
         {navData.map((navItem) => {
           if (navItem.function === 'handleLogOut') navItem.func = handleLogOut;
 
-          if (navItem.text === 'Share') {
+          if (user && navItem.text === 'Share') {
             if (canPost) {
               return <NavItem key={navItem.text} {...navItem} />;
             }

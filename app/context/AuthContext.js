@@ -11,7 +11,14 @@ import {
   updateProfile,
 } from 'firebase/auth';
 import { auth, db } from '../../lib/firebase';
-import { ref, get, set, onValue, serverTimestamp } from 'firebase/database';
+import {
+  ref,
+  get,
+  set,
+  update,
+  onValue,
+  serverTimestamp,
+} from 'firebase/database';
 import slugify from '../../lib/slugify';
 import differenceInDays from 'date-fns/differenceInDays';
 
@@ -129,23 +136,22 @@ export const AuthContextProvider = ({ children }) => {
         const userRef = ref(db, `users/${currentUser.uid}`);
         get(userRef).then((snapshot) => {
           if (!snapshot.exists()) {
-            console.log('so .......... snapshot doesnt exist');
             // User profile doesn't exist, create a new one
-            set(userRef, {
+            update(userRef, {
               username: currentUser.displayName,
               url: currentUser.displayName && slugify(currentUser.displayName),
               bio: '',
               medium: '',
               photoURL: currentUser.photoURL,
-              joined: serverTimestamp(),
+              // joined: serverTimestamp(),
               settings: {
                 dayBeforeNotification: true,
                 weekBeforeNotification: true,
                 tenDaysBeforeNotification: true,
                 accountabilityNotice: true,
               },
-              location: false,
-              latestPost: false,
+              // location: false,
+              // latestPost: false,
             });
           }
 
