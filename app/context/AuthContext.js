@@ -63,6 +63,8 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   const emailSignUp = async (email, password, displayName) => {
+    console.log('hi');
+    console.log('SIGN IN', email, password, displayName);
     try {
       console.log('SIGNT UP');
       // Create a new user with email and password
@@ -71,22 +73,27 @@ export const AuthContextProvider = ({ children }) => {
         email,
         password
       );
+      console.log('userCredential in signup email function: ', userCredential);
 
       await updateProfile(userCredential.user, { displayName });
 
-      console.log('userCredential in signup email function: ', userCredential);
-
       setUser(userCredential.user);
+
+      console.log('userCredential.user: ', userCredential.user);
 
       const userRef = ref(db, `users/${userCredential.user.uid}`);
 
+      console.log('userRef: ', userRef);
+
       // User profile doesn't exist, create a new one
       await set(userRef, {
-        username: userCredential.displayName,
-        url: userCredential.displayName && slugify(userCredential.displayName),
+        username: userCredential.user.displayName,
+        url:
+          userCredential.user.displayName &&
+          slugify(userCredential.user.displayName),
         bio: '',
         medium: '',
-        photoURL: userCredential.photoURL,
+        photoURL: userCredential.user.photoURL,
         joined: serverTimestamp(),
         settings: {
           dayBeforeNotification: true,
