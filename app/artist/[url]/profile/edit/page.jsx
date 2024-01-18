@@ -71,6 +71,7 @@ const EditProfile = () => {
         ...prevForm,
         location: userProfile.location || '',
         bio: userProfile.bio || '',
+        medium: userProfile.medium || '',
       }));
     }
   }, [user, userProfile]);

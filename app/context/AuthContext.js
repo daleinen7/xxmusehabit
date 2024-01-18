@@ -113,7 +113,7 @@ export const AuthContextProvider = ({ children }) => {
       get(userRef).then((snapshot) => {
         if (snapshot.exists()) {
           // User profile doesn't exist, create a new one
-          set(userRef, {
+          update(userRef, {
             username: profileInfo.displayName,
             url: slugify(profileInfo.displayName),
             bio: profileInfo.bio,
