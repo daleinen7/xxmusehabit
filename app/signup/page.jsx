@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { UserAuth } from '../context/AuthContext';
 import FormInput from '../components/FormInput';
@@ -47,6 +47,7 @@ const SignUp = () => {
   const handleGoogleSignIn = async () => {
     try {
       await googleSignIn();
+      router.push('/');
     } catch (error) {
       console.log('ERROR: ', error);
     }
@@ -56,7 +57,9 @@ const SignUp = () => {
     setForm({ ...form, [e.target.id]: e.target.value });
   };
 
-  if (userProfile) router.push(`/artist/${userProfile.url}/profile/edit`);
+  useEffect(() => {
+    if (userProfile) router.push(`/artist/${userProfile.url}/profile/edit`);
+  }, [userProfile, router]);
 
   return (
     <div className="flex w-full">
@@ -100,7 +103,7 @@ const SignUp = () => {
             className="border border-black rounded-md px-[0.875rem] py-[0.625rem]"
             onClick={handleGoogleSignIn}
           >
-            Log In with Google
+            Sign Up with Google
           </button>
         </div>
       </div>
