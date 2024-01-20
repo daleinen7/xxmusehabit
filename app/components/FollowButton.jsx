@@ -2,7 +2,7 @@
 import { ref, update } from 'firebase/database';
 import { db } from '../../lib/firebase';
 import { UserAuth } from '../context/AuthContext';
-import icon from '@/lib/Icon';
+import icons from '@/lib/icons';
 
 const FollowButton = ({ artistUid }) => {
   const { user } = UserAuth();
@@ -17,7 +17,7 @@ const FollowButton = ({ artistUid }) => {
     update(followersRef, { [artistUid]: true });
   };
 
-  return <button onClick={handleFollow}>{icon.bookmark}</button>;
+  return <button onClick={handleFollow}>{icons.bookmark}</button>;
 };
 
 export default FollowButton;

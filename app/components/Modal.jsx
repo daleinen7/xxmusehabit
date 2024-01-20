@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import useClickOutside from '@/lib/UseClickOutside';
 import Button from './Button';
-import icon from '@/lib/Icon';
+import icons from '@/lib/icons';
 
 const Modal = ({ toggleText, children, showModal, setShowModal }) => {
   const wrapperRef = useRef(null);
@@ -22,7 +22,7 @@ const Modal = ({ toggleText, children, showModal, setShowModal }) => {
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-300 rounded p-4 w-full md:max-w-2xl">
           <div className="flex justify-end w-full">
             <button onClick={handleCloseModal} className="flex justify-end">
-              {icon.close}
+              {icons.close}
             </button>
           </div>
           {children}

@@ -30,7 +30,7 @@ export const AuthContextProvider = ({ children }) => {
   const [canPost, setCanPost] = useState(false);
   const [daysUntilNextPost, setDaysUntilNextPost] = useState(null);
 
-  const googleSignIn = () => {
+  const googleSignIn = async () => {
     const provider = new GoogleAuthProvider();
     signInWithRedirect(auth, provider);
   };
@@ -141,26 +141,26 @@ export const AuthContextProvider = ({ children }) => {
         console.log('UNSUBSCRIBE USER : ', currentUser);
         const userRef = ref(db, `users/${currentUser.uid}`);
         get(userRef).then((snapshot) => {
-          // if (!snapshot.exists()) {
-          //   console.log('THERE IS NO USER PROFILE');
-          //   // User profile doesn't exist, create a new one
-          //   update(userRef, {
-          //     username: currentUser.displayName,
-          //     url: currentUser.displayName && slugify(currentUser.displayName),
-          //     bio: '',
-          //     medium: '',
-          //     photoURL: currentUser.photoURL,
-          //     // joined: serverTimestamp(),
-          //     settings: {
-          //       dayBeforeNotification: true,
-          //       weekBeforeNotification: true,
-          //       tenDaysBeforeNotification: true,
-          //       accountabilityNotice: true,
-          //     },
-          //     // location: false,
-          //     // latestPost: false,
-          //   });
-          // }
+          if (!snapshot.exists() && currentUser) {
+            console.log('THERE IS NO USER PROFILE');
+            // User profile doesn't exist, create a new one
+            update(userRef, {
+              username: currentUser.displayName,
+              url: currentUser.displayName && slugify(currentUser.displayName),
+              bio: '',
+              medium: '',
+              photoURL: currentUser.photoURL,
+              joined: serverTimestamp(),
+              settings: {
+                dayBeforeNotification: true,
+                weekBeforeNotification: true,
+                tenDaysBeforeNotification: true,
+                accountabilityNotice: true,
+              },
+              location: false,
+              latestPost: false,
+            });
+          }
 
           onValue(userRef, (snapshot) => {
             const userData = snapshot.val();
