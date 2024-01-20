@@ -1,7 +1,8 @@
 // Inside your Post component
-import { ref, update } from "firebase/database";
-import { db } from "../../lib/firebase";
-import { UserAuth } from "../context/AuthContext";
+import { ref, update } from 'firebase/database';
+import { db } from '../../lib/firebase';
+import { UserAuth } from '../context/AuthContext';
+import icon from '@/lib/Icon';
 
 const FollowButton = ({ artistUid }) => {
   const { user } = UserAuth();
@@ -16,7 +17,7 @@ const FollowButton = ({ artistUid }) => {
     update(followersRef, { [artistUid]: true });
   };
 
-  return <button onClick={handleFollow}>Follow</button>;
+  return <button onClick={handleFollow}>{icon.bookmark}</button>;
 };
 
 export default FollowButton;

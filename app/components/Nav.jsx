@@ -27,7 +27,7 @@ const Nav = () => {
   };
 
   return (
-    <nav className="p-4">
+    <nav className="width-wrapper">
       <ul className="flex gap-6 items-center">
         <li>
           <Link href="/">
