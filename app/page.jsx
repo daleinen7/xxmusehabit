@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { ref, onValue, get } from 'firebase/database';
 import { db } from '../lib/firebase';
 import Modal from './components/Modal';
-
+import Post from './components/Post';
 import PostCard from './components/PostCard';
 
 const fakePosts = [
@@ -22,6 +22,9 @@ const fakePosts = [
       bio: 'whatever',
       joined: 1705767196132,
       location: 'Chicago, IL',
+      photoUrl:
+        'https://lh3.googleusercontent.com/a/ACg8ocIJOgEaAoKZpg2tTmh7oa0N9aoGmWrdqfppz0ipYuU5-sw=s96-c',
+
       medium: 'work work work work',
       url: 'doug',
       username: 'doug',
@@ -42,6 +45,9 @@ const fakePosts = [
       bio: 'whatever',
       joined: 1705767196132,
       location: 'Chicago',
+      photoUrl:
+        'https://lh3.googleusercontent.com/a/ACg8ocIJOgEaAoKZpg2tTmh7oa0N9aoGmWrdqfppz0ipYuU5-sw=s96-c',
+
       medium: 'work work work work',
       url: 'doug',
       username: 'doug',
@@ -61,6 +67,9 @@ const fakePosts = [
       bio: 'whatever',
       joined: 1705767196132,
       location: 'Chicago',
+      photoUrl:
+        'https://lh3.googleusercontent.com/a/ACg8ocIJOgEaAoKZpg2tTmh7oa0N9aoGmWrdqfppz0ipYuU5-sw=s96-c',
+
       medium: 'work work work work',
       url: 'doug',
       username: 'doug',
@@ -81,6 +90,9 @@ const fakePosts = [
       bio: 'whatever',
       joined: 1705767196132,
       location: 'Chicago',
+      photoUrl:
+        'https://lh3.googleusercontent.com/a/ACg8ocIJOgEaAoKZpg2tTmh7oa0N9aoGmWrdqfppz0ipYuU5-sw=s96-c',
+
       medium: 'work work work work',
       url: 'doug',
       username: 'doug',
@@ -101,6 +113,9 @@ const fakePosts = [
       bio: 'whatever',
       joined: 1705767196132,
       location: 'Chicago',
+      photoUrl:
+        'https://lh3.googleusercontent.com/a/ACg8ocIJOgEaAoKZpg2tTmh7oa0N9aoGmWrdqfppz0ipYuU5-sw=s96-c',
+
       medium: 'work work work work',
       url: 'doug',
       username: 'doug',
@@ -121,6 +136,9 @@ const fakePosts = [
       bio: 'whatever',
       joined: 1705767196132,
       location: 'Chicago',
+      photoUrl:
+        'https://lh3.googleusercontent.com/a/ACg8ocIJOgEaAoKZpg2tTmh7oa0N9aoGmWrdqfppz0ipYuU5-sw=s96-c',
+
       medium: 'work work work work',
       url: 'doug',
       username: 'doug',
@@ -141,6 +159,9 @@ const fakePosts = [
       bio: 'whatever',
       joined: 1705767196132,
       location: 'Chicago',
+      photoUrl:
+        'https://lh3.googleusercontent.com/a/ACg8ocIJOgEaAoKZpg2tTmh7oa0N9aoGmWrdqfppz0ipYuU5-sw=s96-c',
+
       medium: 'work work work work',
       url: 'doug',
       username: 'doug',
@@ -160,12 +181,16 @@ const fakePosts = [
       bio: 'whatever',
       joined: 1705767196132,
       location: 'Chicago',
+      photoUrl:
+        'https://lh3.googleusercontent.com/a/ACg8ocIJOgEaAoKZpg2tTmh7oa0N9aoGmWrdqfppz0ipYuU5-sw=s96-c',
+
       medium: 'work work work work',
       url: 'doug',
       username: 'doug',
     },
   },
 ];
+
 export default function Home() {
   const [posts, setPosts] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -213,8 +238,7 @@ export default function Home() {
         showModal={showModal}
         setShowModal={setShowModal}
       >
-        <h2>Modal Content</h2>
-        <p>Why is this not here?</p>
+        <Post post={showModal} />
       </Modal>
       <h2>Main Feed</h2>
       {fakePosts.length > 0 ? (

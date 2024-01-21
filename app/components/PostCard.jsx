@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import getFileType from '../../lib/getFileType';
-import FollowButton from './FollowButton';
+import SaveButton from './SaveButton';
 
 const PostCard = ({ post, setShowModal }) => {
   const { id, title, description, image, draft, poster, format, posterData } =
@@ -41,16 +41,17 @@ const PostCard = ({ post, setShowModal }) => {
         )} */}
       </button>
       <div className="flex justify-between">
-        <div>
-          {' '}
+        <div className="flex gap-2 items-center">
           <Image
             className="rounded-full"
-            src={posterData.profilePic}
+            src={posterData.photoUrl}
             alt={posterData.username}
-          />{' '}
+            width={33}
+            height={33}
+          />
           {posterData.username}
         </div>
-        <FollowButton artistUid={poster} />
+        <SaveButton artistUid={poster} />
       </div>
     </article>
   );

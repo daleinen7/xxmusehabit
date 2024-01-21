@@ -115,6 +115,7 @@ export const AuthContextProvider = ({ children }) => {
           update(userRef, {
             username: profileInfo.displayName,
             url: slugify(profileInfo.displayName),
+            photoURL: profileInfo.profileImageUrl,
             bio: profileInfo.bio,
             medium: profileInfo.medium,
             settings: {

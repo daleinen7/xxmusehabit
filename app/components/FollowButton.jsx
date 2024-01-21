@@ -17,7 +17,14 @@ const FollowButton = ({ artistUid }) => {
     update(followersRef, { [artistUid]: true });
   };
 
-  return <button onClick={handleFollow}>{icons.bookmark}</button>;
+  return (
+    <button
+      className="font-satoshi flex items-center rounded bg-slate-300 py-2 px-4 font-medium"
+      onClick={handleFollow}
+    >
+      Follow <span className="text-lg ml-2">{icons.plus}</span>
+    </button>
+  );
 };
 
 export default FollowButton;
