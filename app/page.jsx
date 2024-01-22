@@ -10,7 +10,7 @@ const fakePosts = [
   {
     title: 'Music Test',
     description: 'test',
-    image: 'https://picsum.photos/seed/asdf/303/233',
+    image: 'https://picsum.photos/seed/asddfghf/303/233',
     draft:
       'https://firebasestorage.googleapis.com/v0/b/musehabit.appspot.com/o/Ek8IJjXm6BeBRY4QFkwDRxrW0CW2%2F2024%2F0%2Fdraft--Nobdp8ldhS2JZfahTIr.mp3?alt=media&token=21cbd2f8-d2a8-403a-8622-64bd59471a83',
     format: 'mp3',
@@ -29,11 +29,13 @@ const fakePosts = [
       url: 'doug',
       username: 'doug',
     },
+    toolsUsed: ['what?'],
+    tags: ['happy', 'sad', 'whatever', 'more whatever', 'sewing'],
   },
   {
     title: 'Video Test',
     description: 'test',
-    image: 'https://picsum.photos/seed/asdf/303/233',
+    image: 'https://picsum.photos/seed/asddfgyf/303/233',
     draft:
       'https://firebasestorage.googleapis.com/v0/b/musehabit.appspot.com/o/Lech%20Piercha%C5%82a%2019281032%20video.mp4?alt=media&token=ded983c8-5215-45ba-9084-460b23b445a6',
     format: 'mp4',
@@ -52,11 +54,13 @@ const fakePosts = [
       url: 'doug',
       username: 'doug',
     },
+    toolsUsed: ['photoshop bourbon and an omni-chord'],
+    tags: ['happy', 'sad', 'whatever', 'more whatever', 'sewing'],
   },
   {
     title: 'Photo Test',
     description: 'test',
-    image: 'https://picsum.photos/seed/asdf/303/233',
+    image: 'https://picsum.photos/seed/asdudftyf/303/233',
     draft: 'https://picsum.photos/seed/whatever/303/233',
     format: 'mp4',
     poster: 'Ek8IJjXm6BeBRY4QFkwDRxrW0CW2',
@@ -74,11 +78,13 @@ const fakePosts = [
       url: 'doug',
       username: 'doug',
     },
+    toolsUsed: ['photoshop bourbon and an omni-chord'],
+    tags: ['happy', 'sad', 'whatever', 'more whatever', 'sewing'],
   },
   {
     title: 'Text Test',
     description: 'test',
-    image: 'https://picsum.photos/seed/asdf/303/233',
+    image: 'https://picsum.photos/seed/asd12345f/303/233',
     draft:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
     format: 'mp4',
@@ -97,11 +103,13 @@ const fakePosts = [
       url: 'doug',
       username: 'doug',
     },
+    toolsUsed: ['photoshop bourbon and an omni-chord'],
+    tags: ['happy', 'sad', 'whatever', 'more whatever', 'sewing'],
   },
   {
     title: 'Video Test',
     description: 'test',
-    image: 'https://picsum.photos/seed/asdf/303/233',
+    image: 'https://picsum.photos/seed/asds5drf/303/233',
     draft:
       'https://firebasestorage.googleapis.com/v0/b/musehabit.appspot.com/o/Lech%20Piercha%C5%82a%2019281032%20video.mp4?alt=media&token=ded983c8-5215-45ba-9084-460b23b445a6',
     format: 'mp4',
@@ -120,11 +128,13 @@ const fakePosts = [
       url: 'doug',
       username: 'doug',
     },
+    toolsUsed: ['photoshop bourbon and an omni-chord'],
+    tags: ['happy', 'sad', 'whatever', 'more whatever', 'sewing'],
   },
   {
     title: 'Music Test',
     description: 'test',
-    image: 'https://picsum.photos/seed/asdf/303/233',
+    image: 'https://picsum.photos/seed/assdr6df/303/233',
     draft:
       'https://firebasestorage.googleapis.com/v0/b/musehabit.appspot.com/o/Ek8IJjXm6BeBRY4QFkwDRxrW0CW2%2F2024%2F0%2Fdraft--Nobdp8ldhS2JZfahTIr.mp3?alt=media&token=21cbd2f8-d2a8-403a-8622-64bd59471a83',
     format: 'mp3',
@@ -143,11 +153,13 @@ const fakePosts = [
       url: 'doug',
       username: 'doug',
     },
+    toolsUsed: ['photoshop bourbon and an omni-chord'],
+    tags: ['happy', 'sad', 'whatever', 'more whatever', 'sewing'],
   },
   {
     title: 'Text Test',
     description: 'test',
-    image: 'https://picsum.photos/seed/asdf/303/233',
+    image: 'https://picsum.photos/seed/asdsder67t5f/303/233',
     draft:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
     format: 'mp4',
@@ -166,6 +178,8 @@ const fakePosts = [
       url: 'doug',
       username: 'doug',
     },
+    toolsUsed: ['photoshop bourbon and an omni-chord'],
+    tags: ['happy', 'sad', 'whatever', 'more whatever', 'sewing'],
   },
   {
     title: 'Photo Test',
@@ -188,6 +202,8 @@ const fakePosts = [
       url: 'doug',
       username: 'doug',
     },
+    toolsUsed: ['photoshop bourbon and an omni-chord'],
+    tags: ['happy', 'sad', 'whatever', 'more whatever', 'sewing'],
   },
 ];
 
@@ -240,7 +256,18 @@ export default function Home() {
       >
         <Post post={showModal} />
       </Modal>
-      <h2>Main Feed</h2>
+      <div className="flex flex-col max-w-[44rem] mt-16 gap-9 mb-9">
+        <h2 className="font-hepta text-5xl font-bold text-center leading-[130%]">
+          This is a tagline that summarizes Musehabit
+        </h2>
+        <p className="text-center text-2xl">
+          This is a small description of Musehabit. It gives a little more
+          detail about what users can do on the website.
+        </p>
+        <h3 className="font-satoshi text-4xl font-bold text-center">
+          Global Feed
+        </h3>
+      </div>
       {fakePosts.length > 0 ? (
         <ul className="width-wrapper w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
           {fakePosts.map((post) => (
