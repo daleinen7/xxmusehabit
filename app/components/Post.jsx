@@ -4,7 +4,16 @@ import SaveButton from './SaveButton';
 import FollowButton from './FollowButton';
 
 const Post = ({ post }) => {
-  const { id, title, description, image, draft, format, posterData } = post;
+  const {
+    id,
+    title,
+    description,
+    image,
+    draft,
+    format,
+    posterData,
+    toolsUsed,
+  } = post;
   const { username, location, photoUrl, medium } = posterData;
 
   const postedAt = new Date(post.postedAt).toLocaleDateString('en-US', {
@@ -49,6 +58,23 @@ const Post = ({ post }) => {
       <div>
         <h3 className="text-lg font-medium ">About this project:</h3>
         <div className="font-satoshi">{description}</div>
+      </div>
+      <div>
+        <h3 className="text-lg font-medium ">Tools Used:</h3>
+        <div className="font-satoshi">{toolsUsed}</div>
+      </div>
+      <div>
+        <h3 className="text-lg font-medium mb-2">Tags:</h3>
+        <div className="font-satoshi">
+          {post.tags.map((tag) => (
+            <span
+              key={tag}
+              className="text-sm mr-2 py-[0.3125rem] px-[0.625rem] rounded-full bg-slate-300"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );
