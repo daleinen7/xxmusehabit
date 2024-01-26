@@ -14,7 +14,7 @@ const PostCard = ({ post, setShowModal }) => {
 
   return (
     <article>
-      <button onClick={openPost} className="w-full">
+      <button onClick={openPost} className="group w-full relative">
         <Image
           src={image}
           alt={title}
@@ -24,21 +24,27 @@ const PostCard = ({ post, setShowModal }) => {
           layout="responsive"
         />
 
-        {/* {mediaType === 'image' && (
-          <Image src={draft} alt={title} width={400} height={240} />
-        )}
         {mediaType === 'video' && (
-          <video width={400} height={240} controls>
-            <source src={draft} />
-            Your browser does not support the video tag.
-          </video>
+          <div className="group-hover:hidden bg-neutral-950 opacity-50 absolute top-0 left-0 w-full h-full object-cover flex items-center justify-center">
+            <Image
+              src={'/images/video-play.svg'}
+              alt={'go to video'}
+              className=""
+              layout="fill"
+            />
+          </div>
         )}
+
         {mediaType === 'audio' && (
-          <audio controls>
-            <source src={draft} />
-            Your browser does not support the audio tag.
-          </audio>
-        )} */}
+          <div className="group-hover:hidden bg-neutral-950 opacity-50 absolute top-0 left-0 w-full h-full object-cover flex items-center justify-center">
+            <Image
+              src={'/images/audio-play.svg'}
+              alt={'go to audio'}
+              className=""
+              layout="fill"
+            />
+          </div>
+        )}
       </button>
       <div className="flex justify-between">
         <div className="flex gap-2 items-center">
