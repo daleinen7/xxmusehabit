@@ -5,3 +5,15 @@
 .width-wrapper {
   @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
 }
+
+.btn {
+  @apply inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm;
+}
+
+.btn-primary {
+  @apply inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-black bg-gray-200 hover:bg-gray-300;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-black border-black hover:bg-slate-300;
+}
