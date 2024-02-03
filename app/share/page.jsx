@@ -7,50 +7,66 @@ import { storage, db } from '../../lib/firebase';
 import uploadFileToStorage from '../../lib/uploadFileToStorage';
 import { daysUntilNextPost } from '../../lib/daysUntilNextPost';
 
+const categories = [
+  'Music',
+  'Prose',
+  'Poetry',
+  'Film',
+  'Animation',
+  'Painting',
+  'Sculpture',
+  'Drawing',
+  'Photography',
+];
+
+const formSteps = [
+  [
+    [
+      {
+        label:
+          "It's your day to post! Upload your art, wether it's finished or not!",
+        input: 'radio',
+        type: 'radio',
+        required: true,
+        options: ["I'm writing", "I'm uploading a file"],
+      },
+    ],
+    [
+      {
+        label: 'Title of your Submission',
+        input: 'title',
+        type: 'text',
+        required: true,
+      },
+      {
+        label: "Description - tell us about what you've been working on!",
+        input: 'description',
+        type: 'textarea',
+        required: true,
+      },
+      { label: 'Preview Image', input: 'image', type: 'file', required: true },
+      {
+        label: 'Category',
+        input: 'category',
+        type: 'select',
+        options: categories,
+        required: true,
+      },
+      { label: 'Draft', input: 'draft', type: 'file', required: true },
+      { label: 'Tags', input: 'tags', type: 'text', required: true },
+    ],
+  ],
+];
+
+const allowedFileFormats = ['png', 'jpg', 'jpeg', 'pdf', 'mp3', 'mp4', 'gif'];
+
 const Share = () => {
   const { register, handleSubmit, errors } = useForm();
   const [shared, setShared] = useState(false);
 
-  const categories = [
-    'Music',
-    'Prose',
-    'Poetry',
-    'Film',
-    'Animation',
-    'Painting',
-    'Sculpture',
-    'Drawing',
-    'Photography',
-  ];
+  const [formStep, setFormStep] = useState(0);
 
   const { user } = UserAuth();
-
-  const allowedFileFormats = ['png', 'jpg', 'jpeg', 'pdf', 'mp3', 'mp4', 'gif'];
-
-  const form = [
-    {
-      label: 'Title of your Submission',
-      input: 'title',
-      type: 'text',
-      required: true,
-    },
-    {
-      label: "Description - tell us about what you've been working on!",
-      input: 'description',
-      type: 'textarea',
-      required: true,
-    },
-    { label: 'Preview Image', input: 'image', type: 'file', required: true },
-    {
-      label: 'Category',
-      input: 'category',
-      type: 'select',
-      options: categories,
-      required: true,
-    },
-    { label: 'Draft', input: 'draft', type: 'file', required: true },
-    { label: 'Tags', input: 'tags', type: 'text', required: true },
-  ];
 
   const onSubmit = async (data) => {
     const { title, description, image, draft, category, tags } = data;
@@ -88,7 +104,7 @@ const Share = () => {
     const imageFileUrl = await uploadFileToStorage(
       storage,
       imageFileName,
-      imageFile,
+      imageFile
     );
 
     const draftFileName = `${
@@ -99,7 +115,7 @@ const Share = () => {
     const draftFileUrl = await uploadFileToStorage(
       storage,
       draftFileName,
-      draftFile,
+      draftFile
     );
 
     const newPost = {
@@ -137,7 +153,7 @@ const Share = () => {
     <>
       <h2>Share</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
-        {form.map((formInput) => {
+        {formSteps[formStep]form.map((formInput) => {
           const { label, input, type, required, options } = formInput;
           return (
             <label key={input} className="flex flex-col">
