@@ -23,7 +23,6 @@ export default async function Profile({ params }) {
 
   const data = snapshot.val();
   const profile = data[Object.keys(data)[0]];
-  console.log('PROFILE: ', Object.keys(data)[0]);
 
   return (
     <>

@@ -6,6 +6,7 @@ import { ref, push, update, child, serverTimestamp } from 'firebase/database';
 import { storage, db } from '../../lib/firebase';
 import uploadFileToStorage from '../../lib/uploadFileToStorage';
 import { daysUntilNextPost } from '../../lib/daysUntilNextPost';
+import icons from '../../lib/icons';
 
 const fileForm = [
   {
@@ -47,8 +48,13 @@ const Share = () => {
   const { register, handleSubmit, errors } = useForm();
   const [shared, setShared] = useState(false);
   const [postType, setPostType] = useState(null);
+  const [selectedType, setSelectedType] = useState(null);
 
-  const { user } = UserAuth();
+  const { user, userProfile } = UserAuth();
+
+  const handleSelectedType = (type) => {
+    setSelectedType(type);
+  };
 
   const onSubmit = async (data) => {
     const { title, description, image, draft, category, tags } = data;
@@ -104,7 +110,6 @@ const Share = () => {
       id: newPostKey,
       title,
       description,
-      category,
       tags,
       image: imageFileUrl,
       draft: draftFileUrl,
@@ -131,13 +136,48 @@ const Share = () => {
   // if no posts
   if (shared === true) return <p>Thanks for sharing the post</p>;
 
+  if (!userProfile) return <p>Loading...</p>;
+
   return (
     <>
-      <h2>Share</h2>
+      <h2 className=" font-satoshi text-4xl font-bold">
+        {userProfile.latestPost ? 'New Post' : 'First Post'}
+      </h2>
+      <p className="py-10">
+        It&apos;s your day to post! Upload your art, whether it&apos;s finished
+        or not!
+      </p>
       {postType === null ? (
-        <div>
-          <button onClick={() => setPostType('text')}>Text</button>
-          <button onClick={() => setPostType('file')}>File</button>
+        <div className="flex flex-col gap-6 items-end">
+          <div className="flex gap-6">
+            {[
+              { icon: icons.write, text: "I'm Writing", type: 'text' },
+              {
+                icon: icons.upload,
+                text: "I'm Uploading a File",
+                type: 'file',
+              },
+            ].map((type) => (
+              <button
+                key={type.text}
+                className={`flex flex-col items-center justify-center py-12 px-5 border-2 rounded w-72 bg-${
+                  type.type === selectedType ? 'slate-200' : 'white'
+                } hover:bg-slate-100 bg`}
+                onClick={() => handleSelectedType(type.type)}
+              >
+                <div>{type.icon}</div>
+                <div>{type.text}</div>
+              </button>
+            ))}
+          </div>
+          {selectedType && (
+            <button
+              className="btn btn-primary"
+              onClick={() => setPostType(selectedType)}
+            >
+              Next
+            </button>
+          )}
         </div>
       ) : postType === 'text' ? (
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
