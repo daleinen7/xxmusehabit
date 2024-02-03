@@ -7,55 +7,38 @@ import { storage, db } from '../../lib/firebase';
 import uploadFileToStorage from '../../lib/uploadFileToStorage';
 import { daysUntilNextPost } from '../../lib/daysUntilNextPost';
 
-const categories = [
-  'Music',
-  'Prose',
-  'Poetry',
-  'Film',
-  'Animation',
-  'Painting',
-  'Sculpture',
-  'Drawing',
-  'Photography',
+const fileForm = [
+  {
+    label: 'Title of your Submission',
+    input: 'title',
+    type: 'text',
+    required: true,
+  },
+  {
+    label: "Description - tell us about what you've been working on!",
+    input: 'description',
+    type: 'textarea',
+    required: true,
+  },
+  { label: 'Preview Image', input: 'image', type: 'file', required: true },
+  { label: 'Draft', input: 'draft', type: 'file', required: true },
+  { label: 'Tags', input: 'tags', type: 'text', required: true },
 ];
 
-const formSteps = [
-  [
-    [
-      {
-        label:
-          "It's your day to post! Upload your art, wether it's finished or not!",
-        input: 'radio',
-        type: 'radio',
-        required: true,
-        options: ["I'm writing", "I'm uploading a file"],
-      },
-    ],
-    [
-      {
-        label: 'Title of your Submission',
-        input: 'title',
-        type: 'text',
-        required: true,
-      },
-      {
-        label: "Description - tell us about what you've been working on!",
-        input: 'description',
-        type: 'textarea',
-        required: true,
-      },
-      { label: 'Preview Image', input: 'image', type: 'file', required: true },
-      {
-        label: 'Category',
-        input: 'category',
-        type: 'select',
-        options: categories,
-        required: true,
-      },
-      { label: 'Draft', input: 'draft', type: 'file', required: true },
-      { label: 'Tags', input: 'tags', type: 'text', required: true },
-    ],
-  ],
+const writeForm = [
+  {
+    label: 'Title of your Submission',
+    input: 'title',
+    type: 'text',
+    required: true,
+  },
+  { label: 'Preview Image', input: 'image', type: 'file', required: true },
+  {
+    label: 'Share a short writing example!',
+    input: 'post',
+    type: 'textarea',
+    required: true,
+  },
 ];
 
 const allowedFileFormats = ['png', 'jpg', 'jpeg', 'pdf', 'mp3', 'mp4', 'gif'];
@@ -63,8 +46,7 @@ const allowedFileFormats = ['png', 'jpg', 'jpeg', 'pdf', 'mp3', 'mp4', 'gif'];
 const Share = () => {
   const { register, handleSubmit, errors } = useForm();
   const [shared, setShared] = useState(false);
-
-  const [formStep, setFormStep] = useState(0);
+  const [postType, setPostType] = useState(null);
 
   const { user } = UserAuth();
 
@@ -152,46 +134,78 @@ const Share = () => {
   return (
     <>
       <h2>Share</h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
-        {formSteps[formStep]form.map((formInput) => {
-          const { label, input, type, required, options } = formInput;
-          return (
-            <label key={input} className="flex flex-col">
-              {label}
-              {type === 'textarea' ? (
-                <textarea
-                  className="p-2 m-2 text-black rounded-md"
-                  {...register(input)}
-                />
-              ) : type === 'select' ? (
-                <select
-                  className="p-2 m-2 text-black rounded-md"
-                  {...register(input)}
-                >
-                  {options.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  className="p-2 m-2 text-black rounded-md"
-                  type={type}
-                  {...register(input)}
-                />
-              )}
-              {/* {errors[input] && <span>This field is required</span>} */}
-            </label>
-          );
-        })}
-        <input
-          type="submit"
-          value="Submit"
-          className="border-gray-400 p-4 border-2 rounded hover:border-white"
-        />
-      </form>
+      {postType === null ? (
+        <div>
+          <button onClick={() => setPostType('text')}>Text</button>
+          <button onClick={() => setPostType('file')}>File</button>
+        </div>
+      ) : postType === 'text' ? (
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
+          {writeForm.map((formInput) => {
+            return (
+              <ShareInput
+                key={formInput.label}
+                formInput={formInput}
+                register={register}
+              />
+            );
+          })}
+
+          <input
+            type="submit"
+            value="Submit"
+            className="border-gray-400 p-4 border-2 rounded hover:border-white"
+          />
+        </form>
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
+          {fileForm.map((formInput) => {
+            return (
+              <ShareInput
+                key={formInput.label}
+                formInput={formInput}
+                register={register}
+              />
+            );
+          })}
+          <input
+            type="submit"
+            value="Submit"
+            className="border-gray-400 p-4 border-2 rounded hover:border-white"
+          />
+        </form>
+      )}
     </>
   );
 };
 export default Share;
+
+const ShareInput = ({ formInput, register }) => {
+  const { label, input, type, required, options } = formInput;
+  return (
+    <label key={input} className="flex flex-col">
+      {label}
+      {type === 'textarea' ? (
+        <textarea
+          className="p-2 m-2 text-black rounded-md"
+          {...register(input)}
+        />
+      ) : type === 'select' ? (
+        <select className="p-2 m-2 text-black rounded-md" {...register(input)}>
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <input
+          className="p-2 m-2 text-black rounded-md"
+          type={type}
+          {...register(input)}
+        />
+      )}
+      {/* {errors[input] && <span>This field is required</span>} */}
+    </label>
+  );
+};
