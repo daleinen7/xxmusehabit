@@ -67,7 +67,6 @@ const Share = () => {
   };
 
   const handleFileChange = (event, inputName) => {
-    console.log('WHATEVER: ', event.target.files.length);
     if (inputName === 'image' && event.target.files.length) {
       const file = event.target.files[0];
       const imageUrl = URL.createObjectURL(file);
