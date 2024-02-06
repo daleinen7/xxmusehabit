@@ -9,6 +9,7 @@ import { daysUntilNextPost } from '../../lib/daysUntilNextPost';
 import icons from '../../lib/icons';
 
 const fileForm = [
+  { label: 'Draft', input: 'draft', type: 'file', required: true },
   {
     label: 'Title of your Submission',
     input: 'title',
@@ -22,7 +23,6 @@ const fileForm = [
     required: true,
   },
   { label: 'Preview Image', input: 'image', type: 'file', required: true },
-  { label: 'Draft', input: 'draft', type: 'file', required: true },
   { label: 'Tags', input: 'tags', type: 'text', required: true },
 ];
 
@@ -33,13 +33,20 @@ const writeForm = [
     type: 'text',
     required: true,
   },
-  { label: 'Preview Image', input: 'image', type: 'file', required: true },
   {
     label: 'Share a short writing example!',
     input: 'post',
     type: 'textarea',
     required: true,
   },
+  {
+    label: "Description - tell us about what you've been working on!",
+    input: 'description',
+    type: 'textarea',
+    required: true,
+  },
+  { label: 'Preview Image', input: 'image', type: 'file', required: true },
+  { label: 'Tags', input: 'tags', type: 'text', required: true },
 ];
 
 const allowedFileFormats = ['png', 'jpg', 'jpeg', 'pdf', 'mp3', 'mp4', 'gif'];
@@ -49,19 +56,32 @@ const Share = () => {
   const [shared, setShared] = useState(false);
   const [postType, setPostType] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const { user, userProfile } = UserAuth();
 
+  console.log('IMAGES: PREVIEWS: ', imagePreview);
+
   const handleSelectedType = (type) => {
     setSelectedType(type);
+  };
+
+  const handleFileChange = (event, inputName) => {
+    console.log('WHATEVER: ', event.target.files.length);
+    if (inputName === 'image' && event.target.files.length) {
+      const file = event.target.files[0];
+      const imageUrl = URL.createObjectURL(file);
+      setImagePreview(imageUrl); // Update the state to hold the image URL
+    }
   };
 
   const onSubmit = async (data) => {
     const { title, description, image, draft, category, tags } = data;
 
     // check if draft is allowed file format
-    const draftFileFormat = draft[0].name.split('.').pop();
-    if (!allowedFileFormats.includes(draftFileFormat)) {
+    const draftFileFormat = draft && draft[0].name.split('.').pop();
+
+    if (!allowedFileFormats.includes(draftFileFormat) && !postType === 'text') {
       console.error('Draft file format not allowed');
       alert('Draft file format not allowed');
       return;
@@ -77,7 +97,7 @@ const Share = () => {
     }
 
     const imageFile = image[0];
-    const draftFile = draft[0];
+    const draftFile = postType === 'file' ? draft[0] : null;
 
     // Generate a unique key for the new post
     const newPostKey = push(child(ref(db), 'posts')).key;
@@ -95,28 +115,40 @@ const Share = () => {
       imageFile
     );
 
-    const draftFileName = `${
-      user.uid
-    }/${today.getFullYear()}/${today.getMonth()}/draft-${newPostKey}.${draftFile.name
-      .split('.')
-      .pop()}`;
-    const draftFileUrl = await uploadFileToStorage(
-      storage,
-      draftFileName,
-      draftFile
-    );
+    const draftFileName =
+      postType === 'file'
+        ? `${
+            user.uid
+          }/${today.getFullYear()}/${today.getMonth()}/draft-${newPostKey}.${draftFile.name
+            .split('.')
+            .pop()}`
+        : null;
+    const draftFileUrl =
+      postType === 'file'
+        ? await uploadFileToStorage(storage, draftFileName, draftFile)
+        : null;
 
-    const newPost = {
-      id: newPostKey,
-      title,
-      description,
-      tags,
-      image: imageFileUrl,
-      draft: draftFileUrl,
-      format: draftFile.name.split('.').pop(),
-      poster: user.uid,
-      postedAt: serverTimestamp(),
-    };
+    const newPost =
+      postType === 'file'
+        ? {
+            id: newPostKey,
+            title,
+            description,
+            tags,
+            image: imageFileUrl,
+            draft: draftFileUrl,
+            format: draftFile.name.split('.').pop(),
+            poster: user.uid,
+            postedAt: serverTimestamp(),
+          }
+        : {
+            id: newPostKey,
+            title,
+            image: imageFileUrl,
+            post: data.post,
+            poster: user.uid,
+            postedAt: serverTimestamp(),
+          };
 
     // Write the new post's data in the posts list
     const updates = {};
@@ -133,14 +165,13 @@ const Share = () => {
     return update(ref(db), updates);
   };
 
-  // if no posts
   if (shared === true) return <p>Thanks for sharing the post</p>;
 
   if (!userProfile) return <p>Loading...</p>;
 
   return (
     <>
-      <h2 className=" font-satoshi text-4xl font-bold">
+      <h2 className=" font-satoshi text-4xl font-bold mt-12">
         {userProfile.latestPost ? 'New Post' : 'First Post'}
       </h2>
       <p className="py-10">
@@ -180,32 +211,58 @@ const Share = () => {
           )}
         </div>
       ) : postType === 'text' ? (
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-8 w-full width-wrapper mb-12 items-end"
+        >
           {writeForm.map((formInput) => {
             return (
-              <ShareInput
-                key={formInput.label}
-                formInput={formInput}
-                register={register}
-              />
+              <>
+                <ShareInput
+                  key={formInput.label}
+                  formInput={formInput}
+                  register={register}
+                  handleFileChange={handleFileChange}
+                />
+                {imagePreview && formInput.type === 'file' && (
+                  <img
+                    src={imagePreview}
+                    alt="Image Preview"
+                    className="w-1/4"
+                  />
+                )}
+              </>
             );
           })}
 
           <input
             type="submit"
-            value="Submit"
-            className="border-gray-400 p-4 border-2 rounded hover:border-white"
+            value="Share Your Post"
+            className="btn btn-primary"
           />
         </form>
       ) : (
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-8 w-full width-wrapper mb-12 items-end"
+        >
           {fileForm.map((formInput) => {
             return (
-              <ShareInput
-                key={formInput.label}
-                formInput={formInput}
-                register={register}
-              />
+              <>
+                <ShareInput
+                  key={formInput.label}
+                  formInput={formInput}
+                  register={register}
+                  handleFileChange={handleFileChange}
+                />
+                {imagePreview && (
+                  <img
+                    src={imagePreview}
+                    alt="Image Preview"
+                    className="w-1/4"
+                  />
+                )}
+              </>
             );
           })}
           <input
@@ -220,14 +277,14 @@ const Share = () => {
 };
 export default Share;
 
-const ShareInput = ({ formInput, register }) => {
+const ShareInput = ({ formInput, register, handleFileChange }) => {
   const { label, input, type, required, options } = formInput;
   return (
-    <label key={input} className="flex flex-col">
+    <label key={input} className="flex flex-col text-sm font-medium w-full">
       {label}
       {type === 'textarea' ? (
         <textarea
-          className="p-2 m-2 text-black rounded-md"
+          className="p-2 m-2 text-black rounded-md border-2 border-gray-400 min-h-[22rem]"
           {...register(input)}
         />
       ) : type === 'select' ? (
@@ -238,9 +295,18 @@ const ShareInput = ({ formInput, register }) => {
             </option>
           ))}
         </select>
+      ) : type === 'file' ? (
+        <>
+          <input
+            className="p-2 m-2 text-black rounded-md border-2 border-gray-400 border-dashed"
+            type={type}
+            onChange={(event) => handleFileChange(event, input)}
+            {...register(input)}
+          />
+        </>
       ) : (
         <input
-          className="p-2 m-2 text-black rounded-md"
+          className="p-2 m-2 text-black rounded-md border-2 border-gray-400"
           type={type}
           {...register(input)}
         />
