@@ -112,36 +112,32 @@ const Share = () => {
       postType === 'file'
         ? `${
             user.uid
-          }/${today.getFullYear()}/${today.getMonth()}/draft-${newPostKey}.${draftFile.name
-            .split('.')
-            .pop()}`
+          }/${today.getFullYear()}/${today.getMonth()}/draft-${newPostKey}.${draftFileFormat}`
         : null;
     const draftFileUrl =
       postType === 'file'
         ? await uploadFileToStorage(storage, draftFileName, draftFile)
         : null;
 
-    const newPost =
-      postType === 'file'
-        ? {
-            id: newPostKey,
-            title,
-            description,
-            tags,
-            image: imageFileUrl,
-            draft: draftFileUrl,
-            format: draftFile.name.split('.').pop(),
-            poster: user.uid,
-            postedAt: serverTimestamp(),
-          }
-        : {
-            id: newPostKey,
-            title,
-            image: imageFileUrl,
-            post: data.post,
-            poster: user.uid,
-            postedAt: serverTimestamp(),
-          };
+    const newPost = {
+      id: newPostKey,
+      title,
+      description,
+      image: imageFileUrl,
+      poster: user.uid,
+      postedAt: serverTimestamp(),
+      tags,
+    };
+
+    if (postType === 'file') {
+      newPost.draft = draftFileUrl;
+      newPost.image = imageFileUrl;
+      newPost.draft = draftFileUrl;
+      newPost.format = draftFileFormat;
+    }
+    if (postType === 'text') {
+      newPost.post = data.post;
+    }
 
     // Write the new post's data in the posts list
     const updates = {};
