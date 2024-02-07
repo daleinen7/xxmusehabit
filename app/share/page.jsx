@@ -60,12 +60,6 @@ const Share = () => {
 
   const { user, userProfile } = UserAuth();
 
-  console.log('IMAGES: PREVIEWS: ', imagePreview);
-
-  const handleSelectedType = (type) => {
-    setSelectedType(type);
-  };
-
   const handleFileChange = (event, inputName) => {
     if (inputName === 'image' && event.target.files.length) {
       const file = event.target.files[0];
@@ -193,7 +187,7 @@ const Share = () => {
                 className={`flex flex-col items-center justify-center py-12 px-5 border-2 rounded w-72 bg-${
                   type.type === selectedType ? 'slate-200' : 'white'
                 } hover:bg-slate-100 bg`}
-                onClick={() => handleSelectedType(type.type)}
+                onClick={() => setSelectedType(type.type)}
               >
                 <div>{type.icon}</div>
                 <div>{type.text}</div>
