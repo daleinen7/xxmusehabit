@@ -1,7 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
 import { UserAuth } from '../context/AuthContext';
-import { daysUntilNextPost } from '../../lib/daysUntilNextPost';
 import navData from '../../lib/navData';
 import Link from 'next/link';
 
@@ -64,13 +62,6 @@ const Nav = () => {
           )}
         </div>
       </ul>
-      {user && (
-        <div className="width-wrapper text-sm">
-          {canPost
-            ? `${daysUntilNextPost} days until post is due`
-            : `Can post again in ${daysUntilNextPost} days`}
-        </div>
-      )}
     </nav>
   );
 };
