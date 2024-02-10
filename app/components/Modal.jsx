@@ -1,9 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import useClickOutside from '@/lib/UseClickOutside';
-import Button from './Button';
 import icons from '@/lib/icons';
 
-const Modal = ({ toggleText, children, showModal, setShowModal }) => {
+const Modal = ({ width, children, showModal, setShowModal }) => {
   const wrapperRef = useRef(null);
 
   useClickOutside(wrapperRef, () => {
@@ -20,7 +19,9 @@ const Modal = ({ toggleText, children, showModal, setShowModal }) => {
 
       {showModal && (
         <div
-          className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-300 rounded pb-12 pt-6 px-12 w-full md:max-w-2xl max-h-[97%] overflow-y-auto z-40"
+          className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-300 rounded pb-12 pt-6 px-12 sm:max-w-${
+            width ? `[${width}]` : '[42rem]'
+          } max-h-[97%] overflow-y-auto z-40`}
           ref={wrapperRef}
         >
           <div className="flex justify-end w-full text-3xl">
