@@ -77,7 +77,7 @@ const Post = ({ post }) => {
           <h3 className="text-lg font-medium ">Tools Used:</h3>
           <div className="font-satoshi">{toolsUsed}</div>
         </div>
-        {post.tags && (
+        {/* {post.tags && (
           <div>
             <h3 className="text-lg font-medium mb-2">Tags:</h3>
             <div className="font-satoshi">
@@ -91,7 +91,7 @@ const Post = ({ post }) => {
               ))}
             </div>
           </div>
-        )}
+        )} */}
       </div>
       {showComments && <CommentsSection postId={post.id} />}
     </div>
