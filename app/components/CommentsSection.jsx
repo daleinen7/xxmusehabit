@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ref, onValue, push, child } from 'firebase/database';
+import Image from 'next/image';
 import { db } from '../../lib/firebase';
 import { UserAuth } from '../context/AuthContext';
 
@@ -77,28 +78,41 @@ const CommentsSection = ({ postId }) => {
     setNewComment('');
   };
 
+  console.log('comments:', comments);
+
   return (
     <div className="comments-section mx-4 px-4 border-l-[1px] border-slate-200">
       <h3>Comments ({comments.length})</h3>
-      <div className="comments-list">
+      <div className="flex flex-col">
         {comments.map((comment, index) => (
-          <div key={index} className="comment">
-            <p>{comment.text}</p>
-            {/* Display other comment details */}
+          <div key={index} className="flex">
+            <Image
+              src={comment.userData?.photoURL}
+              alt={comment.userData?.username}
+              width={48}
+              height={48}
+              className="w-12 h-12 rounded-full"
+            />
+            <div className="flex flex-col">
+              <h4>{comment.userData.username}</h4>
+              <p>{comment.text}</p>
+            </div>
           </div>
         ))}
       </div>
-      <form onSubmit={handleSubmit}>
-        <textarea
-          value={newComment}
-          className="p-2 w-full border border-slate-200 rounded-md mt-2 mb-4"
-          onChange={(e) => setNewComment(e.target.value)}
-          placeholder="Add a comment..."
-        />
-        <button className="btn btn-primary" type="submit">
-          Post Comment
-        </button>
-      </form>
+      {user && (
+        <form onSubmit={handleSubmit}>
+          <textarea
+            value={newComment}
+            className="p-2 w-full border border-slate-200 rounded-md mt-2 mb-4"
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Add a comment..."
+          />
+          <button className="btn btn-primary" type="submit">
+            Post Comment
+          </button>
+        </form>
+      )}
     </div>
   );
 };
