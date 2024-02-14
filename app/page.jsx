@@ -2,9 +2,7 @@
 import { useEffect, useState } from 'react';
 import { ref, onValue, get } from 'firebase/database';
 import { db } from '../lib/firebase';
-import Modal from './components/Modal';
 import Post from './components/Post';
-import PostCard from './components/PostCard';
 
 const fakePosts = [
   {
@@ -249,13 +247,6 @@ export default function Home() {
 
   return (
     <>
-      <Modal
-        toggleText="Close Modal"
-        showModal={showModal}
-        setShowModal={setShowModal}
-      >
-        <Post post={showModal} />
-      </Modal>
       <div className="flex flex-col max-w-[44rem] mt-16 gap-9 mb-9">
         <h2 className="font-hepta text-5xl font-bold text-center leading-[130%]">
           This is a tagline that summarizes Musehabit
@@ -268,11 +259,11 @@ export default function Home() {
           Global Feed
         </h3>
       </div>
-      {fakePosts.length > 0 ? (
-        <ul className="width-wrapper w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-          {fakePosts.map((post) => (
+      {posts.length > 0 ? (
+        <ul className="width-wrapper w-full flex flex-col gap-4">
+          {posts.map((post) => (
             <li key={post.id}>
-              <PostCard post={post} setShowModal={setShowModal} />
+              <Post post={post} />
             </li>
           ))}
         </ul>
