@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import Image from 'next/image';
+import getFileType from '@/lib/getFileType';
 import SaveButton from './SaveButton';
 import FollowButton from './FollowButton';
 import icons from '@/lib/icons';
@@ -20,6 +21,8 @@ const Post = ({ post }) => {
   const { username, location, photoURL, medium } = posterData;
   const [showComments, setShowComments] = useState(false);
 
+  console.log('POST: ', post.format);
+
   const postedAt = new Date(post.postedAt).toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
@@ -30,19 +33,43 @@ const Post = ({ post }) => {
     setShowComments(!showComments);
   };
 
-  console.log('post:', post);
+  const displayFile = {
+    image: (
+      <Image
+        src={image}
+        alt={title}
+        width={704}
+        height={560}
+        className="rounded"
+      />
+    ),
+    video: (
+      <video
+        src={draft}
+        controls
+        className="rounded"
+        width="100%"
+        height="auto"
+      />
+    ),
+    audio: (
+      <audio
+        src={draft}
+        controls
+        className="rounded"
+        width="100%"
+        height="auto"
+      />
+    ),
+  };
 
   return (
     <div className="width-wrapper flex">
       <div className="flex flex-col w-full gap-9">
         <div className="flex w-full gap-4 items-center -pt-2">
-          <Image
-            src={photoURL}
-            alt={username}
-            width={65}
-            height={65}
-            className="rounded-full"
-          />
+          {displayFile[getFileType(format)] || (
+            <div className="w-20 h-20 rounded-full bg-slate-300" />
+          )}
           <div className="font-satoshi">
             <div className=" text-2xl">{username}</div>
             <div className="text-sm">
