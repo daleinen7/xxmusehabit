@@ -96,7 +96,7 @@ const Post = ({ post }) => {
           <div className="font-satoshi">
             <div className=" text-2xl">{username}</div>
             <div className="text-sm">
-              {medium} | {location} | {postedAt}
+              {[medium, location, postedAt].filter(Boolean).join(' | ')}
             </div>
           </div>
           <div className="items-end ml-auto">
@@ -109,9 +109,6 @@ const Post = ({ post }) => {
         <div className="flex items-start">
           <div className="font-satoshi text-2xl font-medium">{title}</div>
           <div className="ml-auto flex gap-5">
-            <button onClick={toggleShowComments} className="text-2xl">
-              {icons.comment}
-            </button>
             <SaveButton />
           </div>
         </div>
@@ -119,6 +116,12 @@ const Post = ({ post }) => {
           <h3 className="text-lg font-medium ">About this project:</h3>
           <div className="font-satoshi">{description}</div>
         </div>
+        <CommentsSection
+          postId={post.id}
+          showComments={showComments}
+          toggleShowComments={toggleShowComments}
+        />
+
         {toolsUsed && (
           <div>
             <h3 className="text-lg font-medium ">Tools Used:</h3>
@@ -141,7 +144,6 @@ const Post = ({ post }) => {
           </div>
         )} */}
       </div>
-      {showComments && <CommentsSection postId={post.id} />}
     </div>
   );
 };

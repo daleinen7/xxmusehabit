@@ -3,8 +3,9 @@ import { ref, onValue, push, child } from 'firebase/database';
 import Image from 'next/image';
 import { db } from '../../lib/firebase';
 import { UserAuth } from '../context/AuthContext';
+import icons from '../../lib/icons';
 
-const CommentsSection = ({ postId }) => {
+const CommentsSection = ({ postId, showComments, toggleShowComments }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
 
@@ -81,26 +82,35 @@ const CommentsSection = ({ postId }) => {
   console.log('comments:', comments);
 
   return (
-    <div className="comments-section mx-4 px-4 border-l-[1px] border-slate-200">
-      <h3>Comments ({comments.length})</h3>
-      <div className="flex flex-col">
-        {comments.map((comment, index) => (
-          <div key={index} className="flex">
-            <Image
-              src={comment.userData?.photoURL}
-              alt={comment.userData?.username}
-              width={48}
-              height={48}
-              className="w-12 h-12 rounded-full"
-            />
-            <div className="flex flex-col">
-              <h4>{comment.userData.username}</h4>
-              <p>{comment.text}</p>
-            </div>
-          </div>
-        ))}
+    <div className="comments-section mx-4 px-4">
+      <div className="flex justify-between">
+        <h4 className="border-b-2 border-black">
+          Comments ({comments.length})
+        </h4>
+        <button onClick={toggleShowComments} className="text-2xl">
+          {showComments ? icons.comment : icons.closedComment}
+        </button>
       </div>
-      {user && (
+      {showComments && (
+        <div className="flex flex-col my-8 gap-4">
+          {comments.map((comment, index) => (
+            <div key={index} className="flex gap-4">
+              <Image
+                src={comment.userData?.photoURL}
+                alt={comment.userData?.username}
+                width={48}
+                height={48}
+                className="w-12 h-12 rounded-full"
+              />
+              <div className="flex flex-col">
+                <h5>{comment.userData.username}</h5>
+                <p>{comment.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      {user && showComments && (
         <form onSubmit={handleSubmit}>
           <textarea
             value={newComment}
