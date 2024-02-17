@@ -260,7 +260,7 @@ export default function Home() {
         </h3>
       </div>
       {posts.length > 0 ? (
-        <ul className="width-wrapper w-full flex flex-col gap-4">
+        <ul className="width-wrapper w-full flex flex-col gap-32">
           {posts.map((post) => (
             <li key={post.id}>
               <Post post={post} />

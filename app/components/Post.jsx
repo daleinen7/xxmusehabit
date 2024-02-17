@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import Image from 'next/image';
+import getFileType from '@/lib/getFileType';
 import SaveButton from './SaveButton';
 import FollowButton from './FollowButton';
 import icons from '@/lib/icons';
@@ -20,6 +21,8 @@ const Post = ({ post }) => {
   const { username, location, photoURL, medium } = posterData;
   const [showComments, setShowComments] = useState(false);
 
+  console.log('POST: ', post);
+
   const postedAt = new Date(post.postedAt).toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
@@ -30,19 +33,66 @@ const Post = ({ post }) => {
     setShowComments(!showComments);
   };
 
-  console.log('post:', post);
+  const displayFile = {
+    image: (
+      <div className="w-full flex justify-center items-center">
+        <Image
+          src={image}
+          alt={title}
+          width={704}
+          height={560}
+          className="rounded"
+        />
+      </div>
+    ),
+    video: (
+      <video
+        src={draft}
+        controls
+        className="rounded"
+        width="100%"
+        height="auto"
+      />
+    ),
+    audio: (
+      <div className="flex flex-col justify-center items-center gap-4">
+        <Image
+          src={image}
+          alt={title}
+          height={181}
+          width={181}
+          className="object-cover  rounded-s-sm h-[11.3125rem] w-[11.3125rem]"
+        />
+        <audio
+          src={draft}
+          controls
+          className="rounded"
+          width="100%"
+          height="auto"
+        />
+      </div>
+    ),
+    writing: (
+      <div className="px-12 py-8 line-clamp-6 font-hepta text-2xl font-medium">
+        {post.post}
+      </div>
+    ),
+  };
 
   return (
     <div className="width-wrapper flex">
       <div className="flex flex-col w-full gap-9">
         <div className="flex w-full gap-4 items-center -pt-2">
-          <Image
-            src={photoURL}
-            alt={username}
-            width={65}
-            height={65}
-            className="rounded-full"
-          />
+          <div className="w-16 h-16 rounded-full relative bg-slate-300">
+            <Image
+              src={photoURL}
+              alt={username}
+              width={64}
+              height={64}
+              className="rounded-full"
+            />
+          </div>
+
           <div className="font-satoshi">
             <div className=" text-2xl">{username}</div>
             <div className="text-sm">
@@ -53,13 +103,9 @@ const Post = ({ post }) => {
             <FollowButton />
           </div>
         </div>
-        <Image
-          src={image}
-          alt={title}
-          width={704}
-          height={560}
-          className="rounded"
-        />
+        {displayFile[getFileType(format)] || (
+          <div className="w-20 h-20 rounded-full bg-slate-300" />
+        )}
         <div className="flex items-start">
           <div className="font-satoshi text-2xl font-medium">{title}</div>
           <div className="ml-auto flex gap-5">
@@ -73,10 +119,12 @@ const Post = ({ post }) => {
           <h3 className="text-lg font-medium ">About this project:</h3>
           <div className="font-satoshi">{description}</div>
         </div>
-        <div>
-          <h3 className="text-lg font-medium ">Tools Used:</h3>
-          <div className="font-satoshi">{toolsUsed}</div>
-        </div>
+        {toolsUsed && (
+          <div>
+            <h3 className="text-lg font-medium ">Tools Used:</h3>
+            <div className="font-satoshi">{toolsUsed}</div>
+          </div>
+        )}
         {/* {post.tags && (
           <div>
             <h3 className="text-lg font-medium mb-2">Tags:</h3>
