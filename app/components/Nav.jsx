@@ -39,6 +39,12 @@ const Nav = () => {
           {navData.map((navItem) => {
             if (navItem.function === 'handleLogOut')
               navItem.func = handleLogOut;
+            if (user && userProfile && navItem.text === 'Profile')
+              <NavItem
+                key="Your Profile"
+                text="Your Profile"
+                url={`/artist/${userProfile.url}/profile`}
+              />;
             if (user && navItem.text === 'Share') {
               if (canPost) {
                 return <NavItem key={navItem.text} {...navItem} />;
@@ -53,13 +59,6 @@ const Nav = () => {
             }
             return null;
           })}
-          {user && userProfile && (
-            <NavItem
-              key="Your Profile"
-              text="Your Profile"
-              url={`/artist/${userProfile.url}/profile`}
-            />
-          )}
         </div>
       </ul>
     </nav>

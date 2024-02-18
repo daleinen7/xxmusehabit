@@ -17,6 +17,7 @@ const Post = ({ post }) => {
     format,
     posterData,
     toolsUsed,
+    tags,
   } = post;
   const { username, location, photoURL, medium } = posterData;
   const [showComments, setShowComments] = useState(false);
@@ -96,7 +97,7 @@ const Post = ({ post }) => {
           <div className="font-satoshi">
             <div className=" text-2xl">{username}</div>
             <div className="text-sm">
-              {medium} | {location} | {postedAt}
+              {[medium, location, postedAt].filter(Boolean).join(' | ')}
             </div>
           </div>
           <div className="items-end ml-auto">
@@ -109,9 +110,6 @@ const Post = ({ post }) => {
         <div className="flex items-start">
           <div className="font-satoshi text-2xl font-medium">{title}</div>
           <div className="ml-auto flex gap-5">
-            <button onClick={toggleShowComments} className="text-2xl">
-              {icons.comment}
-            </button>
             <SaveButton />
           </div>
         </div>
@@ -119,29 +117,38 @@ const Post = ({ post }) => {
           <h3 className="text-lg font-medium ">About this project:</h3>
           <div className="font-satoshi">{description}</div>
         </div>
-        {toolsUsed && (
-          <div>
-            <h3 className="text-lg font-medium ">Tools Used:</h3>
-            <div className="font-satoshi">{toolsUsed}</div>
+        <CommentsSection
+          postId={post.id}
+          showComments={showComments}
+          toggleShowComments={toggleShowComments}
+        />
+
+        {(toolsUsed || tags) && (
+          <div className="flex">
+            {toolsUsed && (
+              <div className="flex-1">
+                <h3 className="text-lg font-medium ">Tools Used:</h3>
+                <div className="font-satoshi">{toolsUsed}</div>
+              </div>
+            )}
+            {tags && (
+              <div className="flex-1">
+                <h3 className="text-lg font-medium mb-2">Tags:</h3>
+                <div className="font-satoshi">
+                  {tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="text-sm mr-2 py-[0.3125rem] px-[0.625rem] rounded-full bg-slate-300"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
-        {/* {post.tags && (
-          <div>
-            <h3 className="text-lg font-medium mb-2">Tags:</h3>
-            <div className="font-satoshi">
-              {post.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="text-sm mr-2 py-[0.3125rem] px-[0.625rem] rounded-full bg-slate-300"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        )} */}
       </div>
-      {showComments && <CommentsSection postId={post.id} />}
     </div>
   );
 };

@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import Image from 'next/image';
 import { UserAuth } from '../context/AuthContext';
 import { useForm } from 'react-hook-form';
 import { ref, push, update, child, serverTimestamp } from 'firebase/database';
@@ -20,10 +21,11 @@ const fileForm = [
     label: "Description - tell us about what you've been working on!",
     input: 'description',
     type: 'textarea',
-    required: true,
+    required: false,
   },
-  { label: 'Preview Image', input: 'image', type: 'file', required: true },
-  { label: 'Tags', input: 'tags', type: 'text', required: true },
+  { label: 'Preview Image', input: 'image', type: 'file', required: false },
+  { label: 'Tools Used', input: 'toolsUsed', type: 'text', required: false },
+  { label: 'Tags', input: 'tags', type: 'text', required: false },
 ];
 
 const writeForm = [
@@ -43,10 +45,11 @@ const writeForm = [
     label: "Description - tell us about what you've been working on!",
     input: 'description',
     type: 'textarea',
-    required: true,
+    required: false,
   },
-  { label: 'Preview Image', input: 'image', type: 'file', required: true },
-  { label: 'Tags', input: 'tags', type: 'text', required: true },
+  { label: 'Preview Image', input: 'image', type: 'file', required: false },
+  { label: 'Tools Used', input: 'toolsUsed', type: 'text', required: false },
+  { label: 'Tags', input: 'tags', type: 'text', required: false },
 ];
 
 const allowedFileFormats = ['png', 'jpg', 'jpeg', 'pdf', 'mp3', 'mp4', 'gif'];
@@ -69,7 +72,7 @@ const Share = () => {
   };
 
   const onSubmit = async (data) => {
-    const { title, description, image, draft, category, tags } = data;
+    const { title, description, image, draft, toolsUsed, tags } = data;
 
     // check if draft is allowed file format
     const draftFileFormat = draft && draft[0].name.split('.').pop();
@@ -119,6 +122,8 @@ const Share = () => {
         ? await uploadFileToStorage(storage, draftFileName, draftFile)
         : null;
 
+    const tagsArray = tags.split(',').map((tag) => tag.trim());
+
     const newPost = {
       id: newPostKey,
       title,
@@ -126,7 +131,8 @@ const Share = () => {
       image: imageFileUrl,
       poster: user.uid,
       postedAt: serverTimestamp(),
-      tags,
+      toolsUsed,
+      tags: tagsArray,
     };
 
     if (postType === 'file') {
@@ -206,7 +212,7 @@ const Share = () => {
         >
           {writeForm.map((formInput) => {
             return (
-              <>
+              <React.Fragment key={formInput.label}>
                 <ShareInput
                   key={formInput.label}
                   formInput={formInput}
@@ -214,13 +220,13 @@ const Share = () => {
                   handleFileChange={handleFileChange}
                 />
                 {imagePreview && formInput.type === 'file' && (
-                  <img
+                  <Image
                     src={imagePreview}
                     alt="Image Preview"
                     className="w-1/4"
                   />
                 )}
-              </>
+              </React.Fragment>
             );
           })}
 
@@ -237,7 +243,7 @@ const Share = () => {
         >
           {fileForm.map((formInput) => {
             return (
-              <>
+              <React.Fragment key={formInput.label}>
                 <ShareInput
                   key={formInput.label}
                   formInput={formInput}
@@ -245,13 +251,13 @@ const Share = () => {
                   handleFileChange={handleFileChange}
                 />
                 {imagePreview && (
-                  <img
+                  <Image
                     src={imagePreview}
                     alt="Image Preview"
                     className="w-1/4"
                   />
                 )}
-              </>
+              </React.Fragment>
             );
           })}
           <input
