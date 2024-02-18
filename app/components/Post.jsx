@@ -17,6 +17,7 @@ const Post = ({ post }) => {
     format,
     posterData,
     toolsUsed,
+    tags,
   } = post;
   const { username, location, photoURL, medium } = posterData;
   const [showComments, setShowComments] = useState(false);
@@ -122,27 +123,31 @@ const Post = ({ post }) => {
           toggleShowComments={toggleShowComments}
         />
 
-        {toolsUsed && (
-          <div>
-            <h3 className="text-lg font-medium ">Tools Used:</h3>
-            <div className="font-satoshi">{toolsUsed}</div>
+        {(toolsUsed || tags) && (
+          <div className="flex">
+            {toolsUsed && (
+              <div className="flex-1">
+                <h3 className="text-lg font-medium ">Tools Used:</h3>
+                <div className="font-satoshi">{toolsUsed}</div>
+              </div>
+            )}
+            {tags && (
+              <div className="flex-1">
+                <h3 className="text-lg font-medium mb-2">Tags:</h3>
+                <div className="font-satoshi">
+                  {tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="text-sm mr-2 py-[0.3125rem] px-[0.625rem] rounded-full bg-slate-300"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
-        {/* {post.tags && (
-          <div>
-            <h3 className="text-lg font-medium mb-2">Tags:</h3>
-            <div className="font-satoshi">
-              {post.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="text-sm mr-2 py-[0.3125rem] px-[0.625rem] rounded-full bg-slate-300"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        )} */}
       </div>
     </div>
   );
