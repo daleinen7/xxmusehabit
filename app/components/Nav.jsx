@@ -1,23 +1,27 @@
 'use client';
+import { useState } from 'react';
 import { UserAuth } from '../context/AuthContext';
-import navData from '../../lib/navData';
 import Link from 'next/link';
+import icons from '@/lib/icons';
 
-const NavItem = ({ url, func, text }) => (
-  <li
-    key={url}
-    className="font-satoshi text-lg font-medium text-gray-500 hover:text-black"
-  >
+const NavItem = ({ url, func, text, arrow }) => (
+  <li className="font-satoshi text-lg font-medium text-gray-500 hover:text-black">
     {url ? (
-      <Link href={url}>{text}</Link>
+      <Link href={url} className="flex items-center">
+        {text}
+        {arrow && <span className={` text-3xl`}>{icons.arrow}</span>}
+      </Link>
     ) : (
-      <button onClick={func}>{text}</button>
+      <button onClick={func} className="flex items-center">
+        {text} {arrow && <span className={` text-3xl`}>{icons.arrow}</span>}
+      </button>
     )}
   </li>
 );
 
 const Nav = () => {
   const { user, userProfile, canPost, daysUntilNextPost, logOut } = UserAuth();
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const handleLogOut = async () => {
     try {
@@ -25,6 +29,10 @@ const Nav = () => {
     } catch (error) {
       console.log('ERROR: ', error);
     }
+  };
+
+  const handleDropdown = () => {
+    setShowDropdown(!showDropdown);
   };
 
   return (
@@ -36,29 +44,39 @@ const Nav = () => {
           </Link>
         </li>
         <div className="flex gap-6 items-center">
-          {navData.map((navItem) => {
-            if (navItem.function === 'handleLogOut')
-              navItem.func = handleLogOut;
-            if (user && userProfile && navItem.text === 'Profile')
-              <NavItem
-                key="Your Profile"
-                text="Your Profile"
-                url={`/artist/${userProfile.url}/profile`}
-              />;
-            if (user && navItem.text === 'Share') {
-              if (canPost) {
-                return <NavItem key={navItem.text} {...navItem} />;
-              }
-            }
-            if (
-              navItem.auth === undefined ||
-              (navItem.auth && user) ||
-              (!navItem.auth && !user)
-            ) {
-              return <NavItem key={navItem.text} {...navItem} />;
-            }
-            return null;
-          })}
+          <NavItem text="About" url="/about" />
+
+          {!user && (
+            <>
+              <NavItem text="Login" url="/login" />
+
+              <NavItem text="Sign Up" url="/signup" />
+            </>
+          )}
+
+          {user && (
+            <>
+              <NavItem text="My Profile" func={handleDropdown} arrow />
+              {showDropdown && (
+                <ul className="absolute top-12 right-0 bg-white shadow-lg p-4">
+                  <li>
+                    <Link href={`/profile/${userProfile.username}`}>
+                      View Profile
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/profile/edit">Edit Profile</Link>
+                  </li>
+                  <li>
+                    <Link href="/profile/settings">Settings</Link>
+                  </li>
+                  <li>
+                    <NavItem func={handleLogOut} text="Logout" />
+                  </li>
+                </ul>
+              )}
+            </>
+          )}
         </div>
       </ul>
     </nav>
