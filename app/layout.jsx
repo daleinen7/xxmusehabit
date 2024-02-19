@@ -4,7 +4,6 @@ import { Hepta_Slab } from 'next/font/google';
 import localFont from 'next/font/local';
 import './globals.css';
 import Nav from './components/Nav';
-import PostNotification from './components/PostNotification';
 
 const satoshi = localFont({
   src: [{ path: './fonts/Satoshi-Variable.ttf' }],
@@ -36,7 +35,6 @@ export default async function RootLayout({ children }) {
         <AuthContextProvider>
           <header>
             <Nav />
-            <PostNotification />
           </header>
           <main className="flex min-h-screen flex-col items-center justify-start">
             {children}
