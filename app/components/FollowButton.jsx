@@ -13,7 +13,7 @@ const FollowButton = ({ artistUid }) => {
 
   const handleFollow = async () => {
     if (!user) {
-      // Handle the case when the user is not authenticated
+      // TODO: Handle the case when the user is not authenticated
       setShowModal(true);
       return;
     }
@@ -25,7 +25,7 @@ const FollowButton = ({ artistUid }) => {
   return (
     <div className="">
       <button
-        className="font-satoshi flex items-center rounded bg-slate-300 py-2 px-4 font-medium"
+        className="btn btn-primary font-satoshi flex items-center "
         onClick={handleFollow}
       >
         Follow <span className="text-lg ml-2">{icons.plus}</span>

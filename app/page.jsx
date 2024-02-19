@@ -31,7 +31,10 @@ export default function Home() {
             // Combine post data and user data
             return {
               ...post,
-              posterData: userData,
+              posterData: {
+                ...userData,
+                uid: post.poster, // Add the poster's UID to posterData
+              },
             };
           })
         );

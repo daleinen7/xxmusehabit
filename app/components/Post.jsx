@@ -1,10 +1,10 @@
 'use client';
 import React, { useState } from 'react';
+import { UserAuth } from '../context/AuthContext';
 import Image from 'next/image';
 import getFileType from '@/lib/getFileType';
 import SaveButton from './SaveButton';
 import FollowButton from './FollowButton';
-import icons from '@/lib/icons';
 import CommentsSection from './CommentsSection';
 
 const Post = ({ post }) => {
@@ -19,10 +19,10 @@ const Post = ({ post }) => {
     toolsUsed,
     tags,
   } = post;
-  const { username, location, photoURL, medium } = posterData;
+  const { username, location, photoURL, medium, uid } = posterData;
   const [showComments, setShowComments] = useState(false);
 
-  console.log('POST: ', post);
+  const { userProfile } = UserAuth();
 
   const postedAt = new Date(post.postedAt).toLocaleDateString('en-US', {
     month: 'long',
@@ -81,7 +81,7 @@ const Post = ({ post }) => {
   };
 
   return (
-    <div className="width-wrapper flex">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 flex">
       <div className="flex flex-col w-full gap-9">
         <div className="flex w-full gap-4 items-center -pt-2">
           <div className="w-16 h-16 rounded-full relative bg-slate-300">
@@ -100,9 +100,11 @@ const Post = ({ post }) => {
               {[medium, location, postedAt].filter(Boolean).join(' | ')}
             </div>
           </div>
-          <div className="items-end ml-auto">
-            <FollowButton />
-          </div>
+          {userProfile && username !== userProfile.username && (
+            <div className="items-end ml-auto">
+              <FollowButton artistUid={uid} />
+            </div>
+          )}
         </div>
         {displayFile[getFileType(format)] || (
           <div className="w-20 h-20 rounded-full bg-slate-300" />

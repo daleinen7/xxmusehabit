@@ -79,8 +79,6 @@ const CommentsSection = ({ postId, showComments, toggleShowComments }) => {
     setNewComment('');
   };
 
-  console.log('comments:', comments);
-
   return (
     <div className="comments-section mx-4 px-4">
       <div className="flex justify-between">
