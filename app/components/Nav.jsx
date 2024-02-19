@@ -61,7 +61,7 @@ const Nav = () => {
                 {showDropdown && (
                   <ul className="absolute mt-2 bg-white shadow-lg p-4 z-50">
                     <li>
-                      <Link href={`/profile/${userProfile.username}`}>
+                      <Link href={`/artist/${userProfile.username}`}>
                         View Profile
                       </Link>
                     </li>
