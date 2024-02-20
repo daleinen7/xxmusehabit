@@ -112,7 +112,7 @@ const Post = ({ post }) => {
         <div className="flex items-start">
           <div className="font-satoshi text-2xl font-medium">{title}</div>
           <div className="ml-auto flex gap-5">
-            <SaveButton />
+            <SaveButton artistUid={uid} />
           </div>
         </div>
         <div>

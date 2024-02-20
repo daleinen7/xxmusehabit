@@ -1,6 +1,6 @@
 // Inside your Post component
-import { useState } from 'react';
-import { ref, update } from 'firebase/database';
+import { useState, useEffect } from 'react';
+import { ref, get, update, onValue } from 'firebase/database';
 import { db } from '../../lib/firebase';
 import { UserAuth } from '../context/AuthContext';
 import Link from 'next/link';
@@ -10,25 +10,61 @@ import icons from '@/lib/icons';
 const FollowButton = ({ artistUid }) => {
   const { user } = UserAuth();
   const [showModal, setShowModal] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   const handleFollow = async () => {
     if (!user) {
-      // TODO: Handle the case when the user is not authenticated
       setShowModal(true);
       return;
     }
 
-    const followersRef = ref(db, `followers/${user.uid}`);
-    update(followersRef, { [artistUid]: true });
+    const followingRef = ref(db, `followers/${user.uid}/${artistUid}`);
+
+    // Check if the user is already following the artist
+    const snapshot = await get(followingRef);
+
+    if (snapshot.exists()) {
+      setIsFollowing(true);
+      handleUnfollow();
+      return;
+    }
+
+    const followerRef = ref(db, `followers/${user.uid}`);
+    update(followerRef, { [artistUid]: true });
+    setIsFollowing(true);
   };
+
+  const handleUnfollow = async () => {
+    const followingRef = ref(db, `followers/${user.uid}/${artistUid}`);
+    update(followingRef, { [artistUid]: false });
+    setIsFollowing(false);
+  };
+
+  useEffect(() => {
+    if (!user) return;
+
+    const followingRef = ref(db, `followers/${user.uid}/${artistUid}`);
+
+    const unsubscribe = onValue(followingRef, (snapshot) => {
+      setIsFollowing(snapshot.exists());
+    });
+
+    return () => unsubscribe();
+  }, [user, artistUid]);
 
   return (
     <div className="">
       <button
-        className="btn btn-primary font-satoshi flex items-center "
+        className="btn btn-primary font-satoshi flex items-center"
         onClick={handleFollow}
       >
-        Follow <span className="text-lg ml-2">{icons.plus}</span>
+        {isFollowing ? (
+          <>Following</>
+        ) : (
+          <>
+            Follow <span className="text-lg ml-2">{icons.plus}</span>
+          </>
+        )}
       </button>
       <Modal
         toggleText="Close Modal"
